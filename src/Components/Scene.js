@@ -56,7 +56,7 @@ function handleClick(x,z){
     // controlsRef.current.update();
     setTargetX(x);
     setTargetZ(z);
-    setFacing(Math.atan((z-userZ)/(x-userX)));
+    setFacing(Math.atan((x-userX)/(z-userZ)));
     setMoving(true);
 }
 useFrame (()=>{
@@ -80,7 +80,7 @@ useFrame (()=>{
 })
   return (
     <>
-        <Box {...props} position={[userX,0,userZ]}  rotation ={3.1415/2 - facing}/>
+        <Box {...props} position={[userX,0,userZ]}  rotation ={facing}/>
         <Floor updateLocation={handleClick} can={props.can}/>
     </>
   );

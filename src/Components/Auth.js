@@ -38,7 +38,7 @@ function AuthOverlay() {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/about">About</Link>
+          <Link to="/about">ℹ️</Link>
         </li>
         <li>
           <Link to="/vote">Vote</Link>
@@ -58,7 +58,7 @@ function AuthOverlay() {
             <h2 className="modal__title">Silk Road Swag </h2>
             <div className="modal__buttons">
               <button className="modal__button" onClick={handleContinueAsGuestClick}>
-                Continue as Guest
+                Guest Entrance
               </button>
               <button className="modal__button" onClick={handleLogin}>
                 Log In
@@ -75,15 +75,7 @@ function AuthOverlay() {
             <form className="auth-form" action="">
   <h2 className="auth-form__title">Login</h2>
   <div className="auth-form__group">
-    <label htmlFor="email" className="auth-form__label">Email:</label>
-    <input type="email" id="email" className="auth-form__input" placeholder="Enter your email" />
-  </div>
-  <div className="auth-form__group">
-    <label htmlFor="password" className="auth-form__label">Password:</label>
-    <input type="password" id="password" className="auth-form__input" placeholder="Enter your password" />
-  </div>
-  <div className="auth-form__group">
-    <button type="submit" className="auth-form__button">Login</button>
+    <button class="button" type="submit" className="auth-form__button">Connect Metamask</button>
   </div>
 </form>
             <button className="modal__button" onClick={handleBack}>
@@ -97,18 +89,16 @@ function AuthOverlay() {
             <form className="auth-form" action="">
   <h2 className="auth-form__title">Register</h2>
   <div className="auth-form__group">
-    <label htmlFor="email" className="auth-form__label">Email:</label>
-    <input type="email" id="email" className="auth-form__input" placeholder="Enter your email" />
+    <input type="email" id="email" className="auth-form__input" placeholder="Username" />
   </div>
   <div className="auth-form__group">
-    <label htmlFor="password" className="auth-form__label">Password:</label>
-    <input type="password" id="password" className="auth-form__input" placeholder="Enter your password" />
+    <input type="email" id="email" className="auth-form__input" placeholder="Email" />
   </div>
+
   <div className="auth-form__group">
-    <label htmlFor="confirm-password" className="auth-form__label">Confirm Password:</label>
-    <input type="password" id="confirm-password" className="auth-form__input" placeholder="Confirm your password" />
+    <button class="button">Metamask</button>
   </div>
-  <div className="auth-form__group">
+  <div>
     <button type="submit" className="auth-form__button">Register</button>
   </div>
 </form>
