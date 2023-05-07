@@ -4,8 +4,15 @@ import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei'
 
 function Box(props) {
+    const [x, setX] = useState(0);
+    const [y, setY] = useState(0);
+    const meshRef = useRef();
+    // useEffect(()=>{
+    //     meshRef.current.lookAt(props.lookAt);
+    // },[props.lookAt])
+    
   return (
-    <mesh {...props}>
+    <mesh castShadow={true} ref={meshRef} {...props} rotation={[0, props.rotation, 0]}>
       <boxBufferGeometry args={[props.width, props.height, props.depth]} />
       <meshStandardMaterial color={props.color} />
     </mesh>
@@ -13,29 +20,25 @@ function Box(props) {
 }
 function Floor(props) {
     
-    
+    const { left, top } = props.can.current.getBoundingClientRect();
     const floorRef = useRef();
   
     const { camera } = useThree();
     const move = (event) => {
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObject(floorRef.current);
-        if (intersects.length > 0) {
-            props.updateLocation(intersects[0].point.x,intersects[0].point.z);
-        }
+        console.log(event.point.x);
+       
+        props.updateLocation(event.point.x,event.point.z);
+
+      
       };
     return (
-        <mesh receiveShadow rotation={[-3.1415/2, 0, 0]} position={[0, -1, 0]}
+        <mesh receiveShadow={true} rotation={[-3.1415/2, 0, 0]} position={[0, -1, 0]}
         ref={floorRef}
      
       onClick={move}
       layers={(floorRef.current && floorRef.current.layers.enable(0), [])}>
-        <planeBufferGeometry attach="geometry" args={[1000, 1000]} />
-        <meshStandardMaterial attach="material" color="grey"  />
+        <planeBufferGeometry receiveShadow attach="geometry" args={[1000, 1000]} />
+        <meshStandardMaterial receiveShadow attach="material" color="grey"  />
       </mesh>
     );
   }
@@ -43,32 +46,75 @@ function Floor(props) {
 
 function User(props) {
 const[userX, setUserX] = useState(0);
-const[userZ, setUserY] = useState(0);
-function handleClick(x,y){
-    setUserX(x);
-    setUserY(y);
+const[userZ, setUserZ] = useState(0);
+const[targetX, setTargetX] = useState(0);
+const[targetZ, setTargetZ] = useState(0);
+const[moving, setMoving] = useState(false);
+const[facing, setFacing] = useState(3.1415/3);
+function handleClick(x,z){
+    // controlsRef.current.target.set(x, 0, y);
+    // controlsRef.current.update();
+    setTargetX(x);
+    setTargetZ(z);
+    setFacing(Math.atan((z-userZ)/(x-userX)));
+    setMoving(true);
 }
+useFrame (()=>{
+    if(moving){
+        const diffX = targetX -userX;
+        const diffY = targetZ -userZ;
+        var length = 10 * Math.sqrt(diffX*diffX+diffY*diffY); //calculating length
+        if (length < 0.5){
+            setMoving(false);
+        }
+        console.log(length);
+       
+        setUserX(userX+diffX/length);
+        setUserZ(userZ+diffY/length);
+        props.cameraHandler(userX+diffX/length,userZ+diffY/length);
+    }
+    else{
+
+        console.log("arrived");
+    }
+})
   return (
     <>
-        <Box {...props} position={[userX,0,userZ]}/>
-        <Floor updateLocation={handleClick}/>
+        <Box {...props} position={[userX,0,userZ]}  rotation ={3.1415/2 - facing}/>
+        <Floor updateLocation={handleClick} can={props.can}/>
     </>
   );
 }
 
 function Scene() {
-   
+    const cameraRef = useRef();
+  const controlsRef = useRef();
+    const canvasRef = useRef();
+
+    function cameraHandle(x,z){
+        controlsRef.current.target.set(x, 0.5, z);
+        controlsRef.current.maxPolarAngle = Math.PI / 1.9;
+        controlsRef.current.minPolarAngle =  Math.PI / 9 ;
+    }
   return (
     <>
-    <Canvas style={{ width: '100%', height: '70vh' }} >
+    <Canvas shadowMap shadows ref={canvasRef} style={{ width: '100%', height: '70vh' }} >
     
-      <Box position={[-20, 0, 0]} width={10} height={10} depth={10} color={'red'} />
-      <Box position={[20, 0, 0]} width={10} height={10} depth={10} color={'blue'} />
-      <Box position={[0, 0, 20]} width={10} height={10} depth={10} color={'green'} />
-      <Box position={[0, 0, -20]} width={10} height={10} depth={10} color={'yellow'} />
-      <ambientLight />
-      <OrbitControls />
-    <User width={1} height={2} depth={0.5} color={'red'} />
+      <Box position={[-20, 0, 0]} width={10} height={10} depth={10} color={'red'} rotation = {0}/>
+      <Box position={[20, 0, 0]} width={10} height={10} depth={10} color={'blue'} rotation = {0}/>
+      <Box position={[0, 0, 20]} width={10} height={10} depth={10} color={'green'} rotation = {0}/>
+      <Box position={[0, 0, -20]} width={10} height={10} depth={10} color={'yellow'} rotation = {0}/>
+      <directionalLight
+      color="white"
+      intensity={1.5}
+      position={[15, 7, 40]}  // position the light above the scene
+    
+      shadow-mapSize-width={512}  // set the shadow map size
+      shadow-mapSize-height={512}
+    />
+     <ambientLight intensity={0.05} color="white" />
+      <OrbitControls ref={controlsRef} args={[cameraRef.current]} />
+      <User width={1} height={2} depth={0.5} color={'red'} can={canvasRef} cameraHandler={cameraHandle}/>
   
     </Canvas>
    <h1>Hello</h1>
