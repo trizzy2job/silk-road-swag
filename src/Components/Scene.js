@@ -1,8 +1,20 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
-import { OrbitControls } from '@react-three/drei'
-
+import { OrbitControls, Text} from '@react-three/drei'
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+const ClickAnimation = (props) =>{
+    return(
+        <mesh
+         visible
+         position={[props.x, -0.95, props.z]}
+         rotation={[-3.1415/2, 0, 0]}
+         castShadow>
+            <ringBufferGeometry args={[0.75, 1, 32]} />
+            <meshBasicMaterial attach="material" color="hotpink" />
+      </mesh>
+    )
+}
 function Box(props) {
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);
@@ -45,6 +57,8 @@ function Floor(props) {
 
 
 function User(props) {
+// const fbx = useLoader(FBXLoader, 'assets/character.fbx');
+const meshRef = useRef();
 const[userX, setUserX] = useState(0);
 const[userZ, setUserZ] = useState(0);
 const[targetX, setTargetX] = useState(0);
@@ -60,7 +74,10 @@ function handleClick(x,z){
     setFacing(Math.atan((z-userZ)/(x-userX)));
     setMoving(true);
 }
-useFrame (()=>{
+useFrame (({camera})=>{
+    if (meshRef.current) {
+        meshRef.current.lookAt(camera.position);
+      }
     if(moving){
         const diffX = targetX -userX;
         const diffY = targetZ -userZ;
@@ -81,10 +98,22 @@ useFrame (()=>{
 })
   return (
     <>
+    {/* <primitive object={fbx} /> */}
         <Box {...props} position={[userX,0,userZ]}  rotation ={3.1415/2 - facing}/>
         <Floor updateLocation={handleClick} can={props.can}/>
+        <mesh ref={meshRef} position={[userX, 2, userZ]}>
+            <Text
+             // set the position of the text
+            fontSize={1} // set the font size
+            color="white" // set the color of the text
+            anchorX="center" // set the horizontal alignment
+            anchorY="middle" // set the vertical alignment
+        >
+            T-Mobile
+        </Text>
+      </mesh>
         {moving == true? 
-        <Box {...props} position={[targetX,0,targetZ]}  rotation ={3.1415/2 - facing}/>:
+        <ClickAnimation x = {targetX} z ={targetZ}/>:
         null
         }
     </>
