@@ -54,6 +54,7 @@ const[facing, setFacing] = useState(3.1415/3);
 function handleClick(x,z){
     // controlsRef.current.target.set(x, 0, y);
     // controlsRef.current.update();
+   
     setTargetX(x);
     setTargetZ(z);
     setFacing(Math.atan((z-userZ)/(x-userX)));
@@ -74,7 +75,7 @@ useFrame (()=>{
         props.cameraHandler(userX+diffX/length,userZ+diffY/length);
     }
     else{
-
+       
         console.log("arrived");
     }
 })
@@ -82,6 +83,10 @@ useFrame (()=>{
     <>
         <Box {...props} position={[userX,0,userZ]}  rotation ={3.1415/2 - facing}/>
         <Floor updateLocation={handleClick} can={props.can}/>
+        {moving == true? 
+        <Box {...props} position={[targetX,0,targetZ]}  rotation ={3.1415/2 - facing}/>:
+        null
+        }
     </>
   );
 }
