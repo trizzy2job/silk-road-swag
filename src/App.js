@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Auth from './Components/Auth';
 import { BrowserRouter as Router } from 'react-router-dom';
-import Navbar from './Components/Navbar.js';
 import Routesz from './Routesz';
-
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <Router>
-      <Navbar />
+       <div className="app">
+      {!isLoggedIn && <Auth/>}
+    </div>
       <Routesz />
     </Router>
   );

@@ -1,0 +1,409 @@
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    background-color: #000000;
+  }
+  
+  ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  li {
+    margin: 0 10px;
+  }
+  
+  a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  a:hover {
+    color:#cd4aea;
+    background-color: #4d0d6e;
+  }
+  
+  a.active {
+    background-color: #c20bb6;
+    color: #333;
+  }
+  
+  a.active:hover {
+    background-color: #cd4aea;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.369);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2; /* add this line */
+
+  }
+  
+  .modal {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  
+  .modal__title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .modal__description {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .modal__buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .modal__button {
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .modal__button:hover,
+  .modal__button:focus {
+    background-color: #4d0d6e;
+    transform: scale(1.05);
+  }
+  
+  .modal__button:active {
+    background-color: #00678f;
+    transform: scale(0.95);
+    color:#000000;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    margin: auto;
+  }
+  
+  .form__title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .form__group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .form__label {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+  
+  .form__input {
+    font-size: 1.2rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .form__button {
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .form__button:hover,
+  .form__button:focus {
+    background-color: #0077a3;
+    transform: scale(1.05);
+  }
+  
+  .form__button:active {
+    background-color: #00678f;
+    transform: scale(0.95);
+  }
+
+  #successReg{
+    text-align: center;
+    font-family: specMed;
+    color:var(--secondary-color);
+    font-size: 20px;
+  }
+  
+  
+  
+  .register{
+    display: flex;
+    color: white;
+    font-family:specMed;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  .register-container {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    background: var(--quadrinary-color);
+    border-radius: 20px;
+    padding: 2rem;
+    min-width: 30%;
+  }
+  .register-container h1{
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 42px;
+    margin-bottom: 40px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 20px;
+    color:var(--primary-color);
+  }
+  
+  .register-formGroup{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+  }
+  .register-formGroup label{
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 36px;
+    margin-bottom: 15px;
+  }
+  .register-formGroup input{
+    background: transparent;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    outline: none;
+    border: solid;
+    border-color:var(--tertiary-color);
+    font-size: 16px;
+    line-height: 26px;
+    color:white
+  }
+  
+  .register-formGroup textarea{
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    outline: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    line-height: 26px;
+  }
+  .register-formGroup select{
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    outline: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    line-height: 26px;
+    text-overflow: ellipsis;
+  }
+  .register-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .register-writeButton{
+    /* float: right; */
+    background: var(--secondary-color);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 30px;
+    color: black;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 21px;
+  }
+  .reg-login-writeButton{
+    background-color: transparent;
+    border: 1px solid var(--tertiary-color);
+    border-radius: 10px;
+    padding: 12px 30px;
+    color: var(--tertiary-color);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+  }
+  @media screen and (max-width: 550px){
+    .register{
+      padding:2rem 1.5rem !important;
+  
+    }
+    .register-container{
+      padding: 1.5rem 1rem;
+    }
+    .register-container h1{
+      /* display: none; */
+        font-size: 36px;
+        margin-top: 0;
+    }
+    .register-formGroup label{
+      font-size: 20px;
+      line-height: 30px;
+    }
+    
+  }
+  #successReg{
+    text-align: center;
+    font-family: specMed;
+    color:var(--secondary-color);
+    font-size: 20px;
+  }
+  
+  
+  
+  .register{
+    display: flex;
+    color: white;
+    font-family:specMed;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  .register-container {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    background: var(--quadrinary-color);
+    border-radius: 20px;
+    padding: 2rem;
+    min-width: 30%;
+  }
+  .register-container h1{
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 42px;
+    margin-bottom: 40px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 20px;
+    color:var(--primary-color);
+  }
+  
+  .register-formGroup{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+  }
+  .register-formGroup label{
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 36px;
+    margin-bottom: 15px;
+  }
+  .register-formGroup input{
+    background: transparent;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    outline: none;
+    border: solid;
+    border-color:var(--tertiary-color);
+    font-size: 16px;
+    line-height: 26px;
+    color:white
+  }
+  
+  .register-formGroup textarea{
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    outline: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    line-height: 26px;
+  }
+  .register-formGroup select{
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    outline: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    line-height: 26px;
+    text-overflow: ellipsis;
+  }
+  .register-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .register-writeButton{
+    /* float: right; */
+    background: var(--secondary-color);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 30px;
+    color: black;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 21px;
+  }
+  .reg-login-writeButton{
+    background-color: transparent;
+    border: 1px solid var(--tertiary-color);
+    border-radius: 10px;
+    padding: 12px 30px;
+    color: var(--tertiary-color);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+  }
+  @media screen and (max-width: 550px){
+    .register{
+      padding:2rem 1.5rem !important;
+  
+    }
+    .register-container{
+      padding: 1.5rem 1rem;
+    }
+    .register-container h1{
+      /* display: none; */
+        font-size: 36px;
+        margin-top: 0;
+    }
+    .register-formGroup label{
+      font-size: 20px;
+      line-height: 30px;
+    }
+    
+  }
