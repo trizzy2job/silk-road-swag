@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Canvas, useFrame, useThree } from 'react-three-fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei'
 
@@ -103,7 +103,7 @@ function Scene() {
     }
   return (
     <>
-    <Canvas shadowMap shadows ref={canvasRef} style={{ width: '100%', height: '70vh' }} >
+    <Canvas shadowMap shadows ref={canvasRef} style={{ width: '100%', height: window.innerHeight - 50}} >
     
       <Box position={[-20, 0, 0]} width={10} height={10} depth={10} color={'red'} rotation = {0}/>
       <Box position={[20, 0, 0]} width={10} height={10} depth={10} color={'blue'} rotation = {0}/>
@@ -122,7 +122,6 @@ function Scene() {
       <User width={1} height={2} depth={0.5} color={'red'} can={canvasRef} cameraHandler={cameraHandle}/>
   
     </Canvas>
-   <h1>Hello</h1>
    </>
   );
 }
