@@ -182,7 +182,7 @@ useFrame (({camera})=>{
 })
   return (
     <>
-       <primitive object={fbx} position={[userX,-1,userZ]} rotation ={[0,3.1415/2 - facing,0]}/>
+       {/* <primitive object={fbx} position={[userX,-1,userZ]} rotation ={[0,3.1415/2 - facing,0]}/> */}
       
         <Floor updateLocation={handleClick} can={props.can}/> 
         <AnimatedFBXModel url={walk} url2={idle}animationName="walking" isWalking={moving}/>
