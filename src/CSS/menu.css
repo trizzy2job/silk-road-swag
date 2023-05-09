@@ -118,12 +118,22 @@ nav {
   }
 
   .button{
-    background-color: yellow;
+    background-color: rgb(255, 0, 208);
     color:rgb(21, 0, 255);
     width: 100%;
     border: black ;
     outline: #00678f;
     height: 25px;
     border-radius: 25px;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
+  }
+  #input{
+    width:200px;
+    height: 2em;
+    text-align: center;
+    border-radius: 25px;
+    margin-bottom: 15px;
+    color:#fb00ff;
+    background-color: #000000;
+    border: #fb00ff;
   }
