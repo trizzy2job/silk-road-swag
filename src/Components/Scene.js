@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 import { OrbitControls, Text } from '@react-three/drei';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import idle from '../assets/idle.fbx';
 import walk from '../assets/walking.fbx';
 import sright from '../assets/skybox_right.png';
@@ -11,6 +12,7 @@ import stop from '../assets/skybox_up.png';
 import sbot from '../assets/skybox_down.png';
 import sfront from '../assets/skybox_front.png';
 import sback from '../assets/skybox_back.png';
+import stage from '../assets/stage.glb';
 
 function AnimatedFBXModel(props) {
   const fbx = useLoader(FBXLoader, props.url);
@@ -55,7 +57,28 @@ function SkyBox(props) {
   const loader = new THREE.CubeTextureLoader();
   // The CubeTextureLoader load method takes an array of urls representing all 6 sides of the cube.
   const texture = loader.load(props.urls);
+  const loader2 = new GLTFLoader();
+  loader2.load(
+    stage,
+    (gltf) => {
+      const model = gltf.scene;
 
+
+
+      model.scale.set(1, 1, 1);
+      model.position.set(-20, -.5, 0);
+      model.rotateY(3.14/2)
+
+            scene.add(model);
+            const light = new THREE.DirectionalLight(0x800080, 5);
+            light.position.set(-20, 3, 0);
+            scene.add(light);
+    },
+    undefined,
+    (error) => {
+      console.error(error);
+    }
+  );
   // Set the scene background property to the resulting texture.
   scene.background = texture;
   return null;
@@ -106,6 +129,7 @@ function User(props) {
   const fbx = useLoader(FBXLoader, walk);
   fbx.scale.set(0.01, 0.01, 0.01);
   const meshRef = useRef();
+  const [name, setName] = useState("Guest");
   const [userX, setUserX] = useState(0);
   const [userZ, setUserZ] = useState(0);
   const [targetX, setTargetX] = useState(0);
@@ -123,7 +147,6 @@ function User(props) {
     }
     setMoving(true);
   }
-  
   useFrame (({camera}) => {
     if (meshRef.current) {
       meshRef.current.lookAt(camera.position);
@@ -154,7 +177,7 @@ function User(props) {
             anchorX="center" // set the horizontal alignment
             anchorY="middle" // set the vertical alignment
             >
-              T-Mobile
+              {props.username}
             </Text>
           </mesh>
         {moving == true? 
@@ -165,7 +188,7 @@ function User(props) {
   );
 }
 
-function Scene() {
+function Scene(props) {
   const cameraRef = useRef();
   const controlsRef = useRef();
   const canvasRef = useRef();
@@ -188,6 +211,7 @@ function Scene() {
     <>
       <Canvas shadowMap shadows ref={canvasRef} style={{ width: '100%', height: window.innerHeight - 50}}>
         <SkyBox urls={urls} />
+        
         <Box position={[-20, 0, 0]} width={10} height={10} depth={10} color={'red'} rotation = {0}/>
         <Box position={[20, 0, 0]} width={10} height={10} depth={10} color={'purple'} rotation = {0}/>
         <Box position={[0, 0, 20]} width={10} height={10} depth={10} color={'green'} rotation = {0}/>
@@ -201,7 +225,7 @@ function Scene() {
         />
         <ambientLight intensity={0.2} color="white" />
         <OrbitControls ref={controlsRef} args={[cameraRef.current]} />
-        <User width={1} height={2} depth={0.5} color={'red'} can={canvasRef} cameraHandler={cameraHandle}/>
+        <User username={props.username} width={1} height={2} depth={0.5} color={'red'} can={canvasRef} cameraHandler={cameraHandle}/>
       </Canvas>
     </>
   );

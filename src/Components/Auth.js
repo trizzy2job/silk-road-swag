@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {useRef,useEffect} from 'react';
-
 import '../CSS/menu.css'
 import { Link } from 'react-router-dom';
 import Web3 from "web3";
@@ -9,7 +8,7 @@ import axios from './Axios.js';
 const USER_REGEX = /^[A-z][A-z0-9-_]{1,32}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-function AuthOverlay() {
+function AuthOverlay(props) {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showLoginButton, setShowLoginButton] = useState(false);
@@ -30,17 +29,22 @@ function AuthOverlay() {
   const [link, setLink] = useState('Connect');
   const handleLoginSecond= async (e) => {
     e.preventDefault();
-    const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
-    console.log(accounts)
+    try{
+      const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
+      console.log(accounts)
     setUserAddress(accounts[0])
     window.accounts = accounts
     setWallet(accounts[0]);
     setLink("Log In");
     connectionProxy();
+    }
+    catch{
+      setErrMsg("Please plug-in Metamask")
+    }
 }
 const connectionProxy = async () => {connection()}
 const connection = async () => {
-  const response = await axios.post("http://74.208.187.32/auth",
+  const response = await axios.post("http://localhost:3500/auth",
                JSON.stringify({wallet}),
               JSON.stringify({
                   headers: { 'Content-Type': 'text/plain'},
@@ -49,7 +53,13 @@ const connection = async () => {
               );
       console.log(response);
     await setUsername(response.data.name);
+    console.log(response.data.name)
+    props.username(response.data.name)
     setLink("Connected");
+    setSuccess(true)
+    localStorage.setItem('username', username);
+    setShowOverlay(false)
+
 }
 const handleLogout = () => {
 setUser(false);
@@ -116,6 +126,8 @@ if (!v2) {
         setSuccess(true);
         setUser('');
         setEmail('');
+        var username2 ={name:username};
+        localStorage.setItem('username', JSON.stringify(username2));
     } catch (err) {
         if (!err?.response) {
             setErrMsg('Server not responding. Please try again.');
@@ -130,7 +142,7 @@ if (!v2) {
         }
     
          else {
-            setErrMsg('Error Z')
+            setErrMsg('Could not find wallet')
     console.log(err)
         }
     }
@@ -149,6 +161,7 @@ if (!v2) {
   const handleBack = () => {
     setShowLoginForm(false);
     setShowRegisterForm(false);
+    setErrMsg('');
   };
   const handleContinueAsGuestClick = () => {
     setShowOverlay(false);
@@ -194,12 +207,19 @@ if (!v2) {
           </>
         )}
 
-        {showLoginForm && (
+        {showLoginForm && ( 
           <>
-  <h2 className="auth-form__title">Login</h2>
-  <div className="auth-form__group">
-    <button id ="forms" class="button" type="submit" className="auth-form__button" onClick={handleLoginSecond}>Connect</button>
-  </div>
+          {success ? (<div><p id = "successReg">Login Successful</p><p id = "successReg">Welcome {username}</p></div>):
+           (<><h2 className="auth-form__title">Login</h2>
+           <div className="auth-form__group">
+            {username}
+            {wallet}
+
+             <button id ="forms" class="button" type="submit" className="auth-form__button" onClick={handleLoginSecond}>Connect</button>
+           </div>
+           </>)}
+  
+  {errMsg}
             <button className="modal__button" onClick={handleBack}>
               Back
             </button>
@@ -208,7 +228,8 @@ if (!v2) {
 
         {showRegisterForm && (
           <>
-           {success ? (<div><p id = "successReg">Registration Successful</p><p id = "successReg">Welcome to the SRS community!</p></div>):(<>
+           {success ? (<div><p id = "successReg">Registration Successful</p><p id = "successReg">Welcome to the SRS community!</p></div>):
+           (<>
   <h2 className="auth-form__title">Register</h2>
   <div className="auth-form__group">
     <input id= "input" placeholder="Username" onChange={(e) => setUser(e.target.value)}/>

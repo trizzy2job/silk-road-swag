@@ -7,9 +7,7 @@ function App() {
 
   return (
     <Router>
-       <div className="app">
-      {!isLoggedIn && <Auth/>}
-    </div>
+ 
       <Routesz />
     </Router>
   );
