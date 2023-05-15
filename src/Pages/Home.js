@@ -1,14 +1,17 @@
-import React from 'react';
+import {React, useState} from 'react';
 import Scene from '../Components/Scene'
-function Home() {
-  function update(){
+import Auth from '../Components/Auth';
 
+function Home() {
+  const [username, setUsername] = useState("");
+  function update(x){
+    setUsername(x)
   }
 
   return (
     <>
-   
-      <Scene />
+      <Auth update ={update} />
+      <Scene username={username}/>
 
     </>
   );

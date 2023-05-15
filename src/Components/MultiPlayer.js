@@ -139,7 +139,7 @@ function AnimatedFBXModel(props) {
               anchorX="center" // set the horizontal alignment
               anchorY="middle" // set the vertical alignment
               >
-                T-Mobile
+                {props.username}
               </Text>
             </mesh>
           {moving == true? 
@@ -228,7 +228,7 @@ function Players(props){
       }, []);
     return(
         <>
-        <User controlsRef = {props.controlsRef} socket={socket}/>
+        <User username = {props.username} controlsRef = {props.controlsRef} socket={socket}/>
         {
         Object.entries(dict).map(([key, value], index) => (
          
