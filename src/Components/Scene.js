@@ -16,8 +16,7 @@ import Players from './MultiPlayer';
 
 
 
-
-function Scene() {
+function Scene(props) {
   const cameraRef = useRef();
   const controlsRef = useRef();
   const canvasRef = useRef();
@@ -48,7 +47,7 @@ function Scene() {
         />
         <ambientLight intensity={0.2} color="white" />
         <OrbitControls ref={controlsRef} args={[cameraRef.current]} />
-       <Players controlsRef={controlsRef}/>
+       <Players username = {props.username} controlsRef={controlsRef}/>
        
       </Canvas>
     </>

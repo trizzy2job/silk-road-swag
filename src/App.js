@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Auth from './Components/Auth';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routesz from './Routesz';
 function App() {
@@ -8,7 +7,6 @@ function App() {
   return (
     <Router>
        <div className="app">
-      {!isLoggedIn && <Auth/>}
     </div>
       <Routesz />
     </Router>
