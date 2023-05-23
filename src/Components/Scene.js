@@ -1,10 +1,6 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
-import * as THREE from 'three';
-import { OrbitControls, Text } from '@react-three/drei';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import idle from '../assets/idle.fbx';
-import walk from '../assets/walking.fbx';
+import React, { useRef} from 'react';
+import { Canvas} from '@react-three/fiber';
+import { OrbitControls} from '@react-three/drei';
 import sright from '../assets/skybox_right.png';
 import sleft from '../assets/skybox_left.png';
 import stop from '../assets/skybox_up.png';

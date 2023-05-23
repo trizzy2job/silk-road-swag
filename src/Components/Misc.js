@@ -1,8 +1,29 @@
-import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
+import  { useRef } from 'react';
 import * as THREE from 'three';
 import stage from '../assets/Stage.obj';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
+export function Floor(props) {
+  const floorRef = useRef();
+  const move = (event) => {
+    props.updateLocation(event.point.x, event.point.z);
+  };
+
+  return (
+    <mesh
+      receiveShadow={true}
+      rotation={[-3.1415/2, 0, 0]}
+      position={[0, -1, 0]}
+      ref={floorRef}
+      onClick={move}
+      layers={(floorRef.current && floorRef.current.layers.enable(0), [])}
+    >
+      <planeBufferGeometry receiveShadow attach="geometry" args={[1000, 1000]} />
+      <meshStandardMaterial receiveShadow attach="material" color="black"  />
+    </mesh>
+  );
+}
 export function SkyBox(props) {
     const { scene } = useThree();
     const loader2 = new OBJLoader();
