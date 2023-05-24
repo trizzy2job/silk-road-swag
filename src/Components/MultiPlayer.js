@@ -143,7 +143,6 @@ function AnimatedFBXModel(props) {
       }
     });
 
-   
     return (
       <>
           <Floor updateLocation={handleClick}/> 
@@ -232,7 +231,6 @@ function NPC(props){
     var real = realPos;
     //put him at the right start place
    
-   
     if(positionSnap != null){
         setRealPos(positionSnap);
         real = positionSnap;
@@ -303,6 +301,8 @@ function Players(props){
       setPlayersLoaded(prevPlayersLoaded => {
         const curr = prevPlayersLoaded + 1;
         const dictLength = Object.keys(dict).length + 1;
+        console.log("BUM::: ", curr/dictLength * 100)
+        props.loadHandler(curr/dictLength * 100);
         if (curr === dictLength && setup) {
           console.log("Fully fully loaded: ", dictLength, dict);
         } else {
@@ -310,18 +310,18 @@ function Players(props){
         }
         return curr;
       });
+
     }
     return(
         <>
-      
-        {setup && (
-  <>
-    <User username = {props.username} controlsRef = {props.controlsRef} socket={socket} loadHandler={loadHandler}/>
-    {Object.entries(dict).map(([key, value], index) => (
-      <NPC key={`NPC-${key}`} position={value} socketCon={key} loadHandler={loadHandler} />
-    ))}
-  </>
-)}
+          {setup && (
+            <>
+              <User username = {props.username} controlsRef = {props.controlsRef} socket={socket} loadHandler={loadHandler}/>
+              {Object.entries(dict).map(([key, value], index) => (
+                <NPC key={`NPC-${key}`} position={value} socketCon={key} loadHandler={loadHandler} />
+              ))}
+            </>
+          )}
         </>
     )
 }
