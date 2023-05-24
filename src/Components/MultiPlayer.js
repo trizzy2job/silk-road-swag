@@ -82,7 +82,36 @@ function AnimatedFBXModel(props) {
     );
   }
 
+
+
+
   function User(props) {
+    function Chatz() {
+      var string = " ";
+      function handleKeyDown(event) {
+        console.log(event.key); // Outputs the pressed key to the console
+        setChat("~ ~ ~")
+        // Check if the pressed key is 'Enter'
+        if (event.key === 'Enter'){
+          
+          // Perform desired actions when 'Enter' key is pressed
+          console.log('Enter key pressed!');
+          setChat(string)
+          string = " "
+        }
+        if (event.key === 'Backspace'){
+          
+          string = string.split()
+        }
+        string += event.key.toString();
+        
+      }
+      
+      // Attach the event listener to the document object
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    const [chat, setChat] = useState('');
+    Chatz();
     const meshRef = useRef();
     const [userX, setUserX] = useState(0);
     const [userZ, setUserZ] = useState(0);
@@ -157,8 +186,17 @@ function AnimatedFBXModel(props) {
               >
                 {props.username}
               </Text>
-            </mesh>
-          {moving === true? 
+              <Text
+               // set the position of the text
+              fontSize={0.3} // set the font size
+              color="yellow" // set the color of the text
+              anchorX="center" // set the horizontal alignment
+              anchorY="bottom" // set the vertical alignment
+              >
+                {chat}
+              </Text>            </mesh>
+          
+          {moving == true? 
             <ClickAnimation x = {targetX} z ={targetZ}/>
           :
             null
