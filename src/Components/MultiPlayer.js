@@ -16,6 +16,7 @@ function AnimatedFBXModel(props) {
     const [mixes2, setMixer2] = useState(null);
     const mixerRef = useRef();
     const mixerRef2 = useRef();
+    console.log("*******,", character);
     useEffect(() => {
       const loader1 = new FBXLoader();
       const loader2 = new FBXLoader();
@@ -29,7 +30,6 @@ function AnimatedFBXModel(props) {
   
       Promise.all([loader1, loader2]).then(() => {
         props.loadHandler();
-        console.log('Done loading, ', props.position);
       });
   
     }, []);
@@ -217,6 +217,7 @@ function NPC(props){
     const meshRef = useRef(null);
     const fbx3 = useLoader(FBXLoader, character);
     fbx3.scale.set(0.01, 0.01, 0.01);
+    console.log("4$$$$$", fbx3);
   
   useEffect(() => {
     new FBXLoader().load(character, setFbx);
@@ -316,7 +317,6 @@ function Players(props){
         newSocket.on("welcome", (data) => {
           setDict(data);
           setSetup(true);
-          console.log("setup is True ", playersLoaded);
         });
         newSocket.on("removePlayer", (data) => {
           setDict(prevState => {
@@ -339,13 +339,7 @@ function Players(props){
       setPlayersLoaded(prevPlayersLoaded => {
         const curr = prevPlayersLoaded + 1;
         const dictLength = Object.keys(dict).length + 1;
-        console.log("BUM::: ", curr/dictLength * 100)
         props.loadHandler(curr/dictLength * 100);
-        if (curr === dictLength && setup) {
-          console.log("Fully fully loaded: ", dictLength, dict);
-        } else {
-          console.log("step loaded: ", curr, " / ", dictLength);
-        }
         return curr;
       });
 
