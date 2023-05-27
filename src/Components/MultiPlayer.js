@@ -340,7 +340,6 @@ function Players(props){
         setDict(prevState => ({ ...prevState, [data[0]]: data}));
         importedUsername = data[1];
     });
-      
     }, []);
 
     function loadHandler() {
@@ -354,6 +353,7 @@ function Players(props){
         }
         return curr;
       });
+
     }
     return(
         <>

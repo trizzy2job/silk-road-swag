@@ -10,6 +10,7 @@ const USER_REGEX = /^[A-z][A-z0-9-_]{1,32}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 function AuthOverlay(props) {
+  const [doneLoad, setDoneLoad] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showLoginButton, setShowLoginButton] = useState(false);
@@ -77,6 +78,16 @@ useEffect(() => {
 useEffect(() => {
     setValidEmail(EMAIL_REGEX.test(email));
 }, [email])
+useEffect(() => {
+  if (props.progress === 100) {
+    const timer = setTimeout(() => {
+      console.log('Message after 5 seconds');
+      setDoneLoad(true);
+    }, 3000); // 5000 milliseconds = 5 seconds
+
+    return () => clearTimeout(timer);
+  }
+}, [props.progress]);
 useEffect(() => {
     setErrMsg('');
 }, [user, email])
@@ -175,8 +186,52 @@ if (!v2) {
         )}
       </ul>
     </nav>
-    {showOverlay && (
-    <div className="overlay">
+    {showOverlay && !doneLoad && (
+      <div className="overlay">
+      <div className="modal">
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '33%',
+            padding: '10px',
+            textAlign: 'center',
+            zIndex: '9999', // Higher z-index value to appear in front
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              height: '20px',
+              background: 'white',
+              borderRadius: '5px',
+              overflow: 'hidden',
+              animation: 'glow 2s ease-in-out infinite',
+            }}
+          >
+            <div
+              style={{
+                width: `${props.progress}%`,
+                height: '100%',
+                background: 'purple',
+              }}
+            ></div>
+          </div>
+          <div style={{ marginTop: '10px', color: 'purple' }}>
+            Loading... {props.progress}%
+          </div>
+        </div>
+        </div></div>
+      )}
+    
+
+
+
+
+    {showOverlay && doneLoad &&(
+    <div className="overlay" width = '50%'>
       <div className="modal">
         {!showLoginForm && !showRegisterForm && (
           <>
