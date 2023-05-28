@@ -4,10 +4,11 @@ import * as THREE from 'three';
 import io from 'socket.io-client';
 import { Text } from '@react-three/drei';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import character from '../assets/character.fbx';
+// import character from '../assets/character.fbx';
 import idle from '../assets/idle.fbx';
 import walk from '../assets/walking.fbx';
 import {ClickAnimation, Floor} from './Misc'
+import newShirt from '../assets/manngrid.jpeg'
 
 function AnimatedFBXModel(props) {
     const [fbx, setFbx] = useState(null);
@@ -16,15 +17,21 @@ function AnimatedFBXModel(props) {
     const [mixes2, setMixer2] = useState(null);
     const mixerRef = useRef();
     const mixerRef2 = useRef();
-    console.log("*******,", character);
     useEffect(() => {
       const loader1 = new FBXLoader();
       const loader2 = new FBXLoader();
       loader1.load(idle, (fbx) => {
+        console.log("here is it", fbx);
+        const shirtMesh = fbx.getObjectByName('Ch42_Shirt');
+        const material = new THREE.MeshStandardMaterial({  map: new THREE.TextureLoader().load(newShirt) });
+        shirtMesh.material = material;
         setFbx(fbx);
       });
-  
+    
       loader2.load(walk, (fbx) => {
+        const shirtMesh = fbx.getObjectByName('Ch42_Shirt');
+        const material = new THREE.MeshStandardMaterial({ map: new THREE.TextureLoader().load(newShirt) });
+        shirtMesh.material = material;
         setFbx2(fbx);
       });
   
@@ -122,8 +129,6 @@ function AnimatedFBXModel(props) {
     const clock = new THREE.Clock();
     //Restart the clock when the User is rerendered. Everytime a new move instruction occurs, a rerender is triggered.
     clock.start();
-    const fbx = useLoader(FBXLoader, walk);
-    fbx.scale.set(0.01, 0.01, 0.01);
     
     function handleClick(x,z){
       props.controlsRef.current.maxPolarAngle = Math.PI / 2.1; 
@@ -208,20 +213,16 @@ function AnimatedFBXModel(props) {
 function NPC(props){
   const clock3 = useRef(new THREE.Clock());
     const [realPos, setRealPos] = useState([0,0]);
-    const [fbx, setFbx] = useState(null);
     const [first, setFirst] = useState(null);
     const [facing, setFacing] = useState(0);
     const [walkVector, setWalkVector] = useState(null);
     const [positionSnap, setPositionSnap] = useState(null);
     const [distance, setDistance] = useState(0);
     const meshRef = useRef(null);
-    const fbx3 = useLoader(FBXLoader, character);
-    fbx3.scale.set(0.01, 0.01, 0.01);
-    console.log("4$$$$$", fbx3);
+ 
+
   
-  useEffect(() => {
-    new FBXLoader().load(character, setFbx);
-  }, []);
+
   useFrame (({camera}) => {
     if(meshRef != null){
       if(meshRef.current) {
@@ -284,9 +285,6 @@ function NPC(props){
   }
   }, [props.position]);
 
-  if (!fbx) {
-    return null;
-  }
     return(
         <>
             <mesh ref={meshRef} position={[realPos[0],2,realPos[1]]}>
@@ -328,6 +326,7 @@ function Players(props){
           setDict(prevState => ({ ...prevState, [data[0]]: [0,0] }));
       });
         newSocket.on("moving_message", (data) => {
+
           const temp = [data[1], data[2]];
           const key = data[0]
           setDict(prevState => ({ ...prevState, [key]: temp }));
