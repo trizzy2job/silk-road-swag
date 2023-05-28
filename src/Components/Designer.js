@@ -244,32 +244,7 @@ export const Designer = () =>{
     }
 
     async function infura(e){
-        // const ipfsClient = require('ipfs-http-client');
-        // const projectId = '28zAasknKw7w7ViLtFtNtxkNdCz';
-        // const projectSecret = 'ca916af6aecabd19b54015a2661681c4';
-        // const auth ='Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
-        // const client = create({
-        //     host: 'ipfs.infura.io',
-        //     port: 5001,
-        //     protocol: 'https',
-        //     headers: {
-        //         authorization: auth,
-        //     },
-        // });
-        // // const link = document.createElement("a");
-        // // link.href=e;
-        // // link.download ="text.txt"
-        // console.log("Right before server add")
-        // await client.add(dataURItoBlob(e)).then((res) => {
-        // //    console.log(res.path);
-        // //    metaJson("https://ipfs.io/ipfs/"+res.path);
-        //     // metaJson("ipfs://"+res.path, shirtColor);
-        //     metaJson("ipfs://"+childData, shirtColor);
-        //     sessionStorage.setItem("designSubmission", childData)
-        //     // sessionStorage.setItem("jsonFile", "ipfs://"+childData)
-        // });
-        
-        // window.location.href = "../Submit"
+     
 
     }
 
@@ -549,6 +524,7 @@ export const Designer = () =>{
                             : null}  
                     </div>
                     {childData !=''?
+                    //screenshot is deplayed
                         <div >
                             <button href = "/Submit" id="finishDButton" onClick={e=>{
                                     const canvas = document.getElementById("upCanvas");
@@ -577,7 +553,7 @@ export const Designer = () =>{
 
                                 <div>
                                     <h1>Your image:</h1>
-                                    <img src={childData}/>
+                                    <img width="100%"src={childData}/>
                                     <button onClick={e=>{submitPage()}}>I'm happy with how it looks</button>
                                 </div>
 
@@ -589,6 +565,7 @@ export const Designer = () =>{
                 : null}    
             </div>
             <div id="dd2model">
+                {/* props.parent is called to set the screenshot of the design */}
             {/* <Model loc={[-1500,0,0]} cam={[-1500,0,-2000]}/> */}
                 <InsideDesigner src={threedmock} scene={scene} z={zcamera} move={move} color={shirtColor} parent={setChildData} />
             

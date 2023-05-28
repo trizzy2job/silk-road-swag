@@ -76,7 +76,7 @@ function ScreenshotButton({ ...props }) {
     <sprite {...props} scale={[100, 100, 100]} onClick={ScreenShot}>
       <spriteMaterial
         attach="material"
-        color={'lightblue'}
+        color={'red'}
         depthWrite={false}
         depthTest={false}
         renderOrder={10000}
@@ -407,7 +407,7 @@ export function BasicShirtDisplaySill(prop){
     const [x, setx] = useState(125);
     const [y, sety] = useState(10);
     const [z, setz] = useState(125);
-
+    const { gl, scene, camera } = useThree()
     useFrame((state) => {
           
         if(prop.scene == 0){setYRot(yrot+1)};
@@ -432,7 +432,32 @@ export function BasicShirtDisplaySill(prop){
             setRealFbx(realFbx);
         }
           },[prop.itemt]);
-    
+    function screenShot(){
+      if(prop.readyForScreenShot)
+        console.log("buttered up for a screenshot");
+        gl.render(scene, camera)
+        gl.toneMapping = THREE.ACESFilmicToneMapping
+        gl.toneMappingExposure = 0.6
+        gl.outputEncoding = THREE.sRGBEncoding
+        gl.preserveDrawingBuffer = true
+        gl.domElement.toBlob(
+          async function(blob) {
+            // var a = document.createElement('a')
+            // var url = URL.createObjectURL(blob)
+            // a.href = url
+            // a.download = 'SRSDesign.jpg'
+            // a.click()
+            // await (infura(blob)).then((res) => {
+            //   console.log("before: "+res);
+            var image = new Image();
+            image.src = URL.createObjectURL(blob);
+            prop.parent(image.src);
+            // });
+          }
+          // 'image/jpg',
+          
+        )
+    }
     // const fbx = useLoader(OBJLoader, shirtTwo);
    
    // I've used meshPhysicalMaterial because the texture needs lights to be seen properly.
@@ -441,7 +466,7 @@ export function BasicShirtDisplaySill(prop){
    }
    return (
        <>
-       <primitive object={realFbx} position={[x+200 ,y, z]} rotation-y={Math.PI * 0.005*yrot}/>
+       <primitive object={realFbx} position={[x+200 ,y, z]} rotation-y={Math.PI * 0.005*yrot} onClick={screenShot}/>
      {/* <mesh rotation-y={Math.PI * 0.005*yrot} name={prop.name} castShadow position={[x+200 ,y, z]}geometry={geometry} >
       
        <meshStandardMaterial map={texture}
@@ -535,7 +560,7 @@ export const InsideDesigner= (props) => {
       {/* Second Room */}
         {props.scene > 0  ?
             <>
-            <ambientLight intensity={0.2} color={"white"} />
+            <ambientLight intensity={0.5} color={"white"} />
                 <CameraController1 />
                 <LightFixtB center={[250,100,-250]} scene={props.scene}/>
                 {/* <MetalBase /> */}
@@ -564,7 +589,7 @@ export const InsideDesigner= (props) => {
         </>
         
         
-        <BasicShirtDisplaySill move={props.move} scene={props.scene} itemt={props.src} name="joker design"/>
+        <BasicShirtDisplaySill move={props.move} scene={props.scene} itemt={props.src} name="joker design" readyForScreenShot={props.scene==2} parent={props.parent}/>
         {/* <BackDrop2/> */}
         
         
