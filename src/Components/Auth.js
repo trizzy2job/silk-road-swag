@@ -36,8 +36,8 @@ function AuthOverlay(props) {
     setUserAddress(accounts[0])
     window.accounts = accounts
     setWallet(accounts[0]);
-    setLink("Log In");
-    connectionProxy();
+    setLink("Connected! Click Here To Continue");
+    connection();
 }
 const connectionProxy = async () => {connection()}
 const connection = async () => {
@@ -49,10 +49,14 @@ const connection = async () => {
               })
               );
       console.log(response);
-    await setUsername(response.data.name);
-              props.update(username);
-    setLink("Connected");
-}
+    await(setUsername(response.data.name), props.update(response.data.name), setLink("Connected!"));
+    if(props.username !== ''){
+      setShowOverlay(false);
+    }
+    else(
+      connection()
+    )
+  } 
 const handleLogout = () => {
 setUser(false);
 }
@@ -180,7 +184,7 @@ if (!v2) {
           <Link to="/vote">Vote</Link>
         </li>
         {showLoginButton && (
-          <li onClick={handleLoginTop}>
+          <li id = "loginbutton" onClick={handleLoginTop}>
             <a>Login</a>
           </li>
         )}
@@ -225,11 +229,6 @@ if (!v2) {
         </div>
         </div></div>
       )}
-    
-
-
-
-
     {showOverlay && doneLoad &&(
     <div className="overlay" width = '50%'>
       <div className="modal">
@@ -254,7 +253,7 @@ if (!v2) {
           <>
   <h2 className="auth-form__title">Login</h2>
   <div className="auth-form__group">
-    <button id ="forms" class="button" type="submit" className="auth-form__button" onClick={handleLoginSecond}>Connect</button>
+    <button id ="forms" class="button" type="submit" className="auth-form__button" onClick={handleLoginSecond}>{link}</button>
   </div>
             <button className="modal__button" onClick={handleBack}>
               Back

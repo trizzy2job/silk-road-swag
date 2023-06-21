@@ -16,6 +16,7 @@ function AnimatedFBXModel(props) {
     
     const mixerRef = useRef();
     const mixerRef2 = useRef();
+    console.log("*******,", character);
     useEffect(() => {
       const loader1 = new FBXLoader();
       const loader2 = new FBXLoader();
@@ -29,7 +30,6 @@ function AnimatedFBXModel(props) {
   
       Promise.all([loader1, loader2]).then(() => {
         props.loadHandler();
-        console.log('Done loading, ', props.position);
       });
   
     }, []);
@@ -220,6 +220,7 @@ function NPC(props){
     const meshRef = useRef(null);
     const fbx3 = useLoader(FBXLoader, character);
     fbx3.scale.set(0.01, 0.01, 0.01);
+    console.log("4$$$$$", fbx3);
   
   useEffect(() => {
     new FBXLoader().load(character, setFbx);
@@ -300,7 +301,7 @@ function NPC(props){
               anchorX="center" // set the horizontal alignment
               anchorY="middle" // set the vertical alignment
               >
-                {importedUsername}
+                {props.username}
               </Text>
             </mesh>
           <AnimatedFBXModel isWalking={realPos != props.position} position={[realPos[0],-1,realPos[1]]} rotation ={[0,3.1415/2 - facing,0]} loadHandler={props.loadHandler}/>
@@ -320,7 +321,6 @@ function Players(props){
         newSocket.on("welcome", (data) => {
           setDict(data);
           setSetup(true);
-          console.log("setup is True ", playersLoaded);
         });
         newSocket.on("removePlayer", (data) => {
           setDict(prevState => {
@@ -332,13 +332,17 @@ function Players(props){
           setDict(prevState => ({ ...prevState, [data[0]]: [0,0] }));
       });
         newSocket.on("moving_message", (data) => {
-          const temp = [data[1], data[2]];
+          var temp = dict[data[0]];
+          temp[0] = data[0]
+          temp[1] =data[2]
           const key = data[0]
           setDict(prevState => ({ ...prevState, [key]: temp }));
       });
       newSocket.on("usernamez", (data) => {
-        setDict(prevState => ({ ...prevState, [data[0]]: data}));
-        importedUsername = data[1];
+        var temp = dict[data[0]];
+        temp.append(data[1])
+          const key = data[0]
+          setDict(prevState => ({ ...prevState, [key]: temp }));
     });
     }, []);
 
@@ -346,11 +350,7 @@ function Players(props){
       setPlayersLoaded(prevPlayersLoaded => {
         const curr = prevPlayersLoaded + 1;
         const dictLength = Object.keys(dict).length + 1;
-        if (curr === dictLength && setup) {
-          console.log("Fully fully loaded: ", dictLength, dict);
-        } else {
-          console.log("step loaded: ", curr, " / ", dictLength);
-        }
+        props.loadHandler(curr/dictLength * 100);
         return curr;
       });
 
@@ -361,8 +361,8 @@ function Players(props){
         {setup && (
   <>
     <User username = {props.username} controlsRef = {props.controlsRef} socket={socket} loadHandler={loadHandler}/>
-    {Object.entries(dict).map(([key, value], index) => (
-      <NPC key={`NPC-${key}`} position={value} socketCon={key} loadHandler={loadHandler} username={value[2]} />
+    {Object.entries(dict).map(([key, value]) => (
+      <NPC key={`NPC-${key}`} position={[value[0],value[1]]} socketCon={key} loadHandler={loadHandler} username={value[2]} />
     ))}
   </>
 )}
