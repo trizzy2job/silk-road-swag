@@ -4,10 +4,12 @@ import * as THREE from 'three';
 import io from 'socket.io-client';
 import { Text } from '@react-three/drei';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import character from '../assets/character.fbx';
+// import character from '../assets/character.fbx';
 import idle from '../assets/idle.fbx';
 import walk from '../assets/walking.fbx';
 import {ClickAnimation, Floor} from './Misc'
+import newShirt from '../assets/manngrid.jpeg'
+
 function AnimatedFBXModel(props) {
     const [fbx, setFbx] = useState(null);
     const [fbx2, setFbx2] = useState(null);
@@ -16,15 +18,21 @@ function AnimatedFBXModel(props) {
     
     const mixerRef = useRef();
     const mixerRef2 = useRef();
-    console.log("*******,", character);
     useEffect(() => {
       const loader1 = new FBXLoader();
       const loader2 = new FBXLoader();
       loader1.load(idle, (fbx) => {
+        console.log("here is it", fbx);
+        const shirtMesh = fbx.getObjectByName('Ch42_Shirt');
+        const material = new THREE.MeshStandardMaterial({  map: new THREE.TextureLoader().load(newShirt) });
+        shirtMesh.material = material;
         setFbx(fbx);
       });
-  
+    
       loader2.load(walk, (fbx) => {
+        const shirtMesh = fbx.getObjectByName('Ch42_Shirt');
+        const material = new THREE.MeshStandardMaterial({ map: new THREE.TextureLoader().load(newShirt) });
+        shirtMesh.material = material;
         setFbx2(fbx);
       });
   
@@ -89,7 +97,10 @@ function AnimatedFBXModel(props) {
       setVary(vary +1)
   }
     function Chatz() {
-      var string = " ";
+      var hack = 0
+      var string = "..." ;
+      let element = document.getElementById('root');
+
       function handleKeyDown(event) {
         console.log(event.key); // Outputs the pressed key to the console
         setChat("~ ~ ~")
@@ -99,13 +110,18 @@ function AnimatedFBXModel(props) {
           // Perform desired actions when 'Enter' key is pressed
           console.log('Enter key pressed!');
           setChat(string)
-          string = " "
+          string = ""
         }
-        if (event.key === 'Backspace'){
+        else if (event.key === 'Backspace'){
           
           string = string.split()
         }
-        string += event.key.toString();
+        else if (hack < 2) {
+          element.dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}));
+          element.dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}));
+          string += event.key.toString();
+  hack++;
+        }
         
       }
       
@@ -124,8 +140,6 @@ function AnimatedFBXModel(props) {
     const clock = new THREE.Clock();
     //Restart the clock when the User is rerendered. Everytime a new move instruction occurs, a rerender is triggered.
     clock.start();
-    const fbx = useLoader(FBXLoader, walk);
-    fbx.scale.set(0.01, 0.01, 0.01);
     
     function handleClick(x,z){
       props.controlsRef.current.maxPolarAngle = Math.PI / 2.1; 
@@ -144,7 +158,6 @@ function AnimatedFBXModel(props) {
         if(props.socket){
             props.socket.emit("send_message", [x,z])
         }
-        
       }
   }
 
@@ -173,8 +186,6 @@ function AnimatedFBXModel(props) {
         }
       }
     });
-
-   
     return (
       <>
           <Floor updateLocation={handleClick}/> 
@@ -187,14 +198,14 @@ function AnimatedFBXModel(props) {
               anchorX="center" // set the horizontal alignment
               anchorY="middle" // set the vertical alignment
               >
-                {props.username}
+                {props.username ? props.username : "Guest"}
               </Text>
               <Text
                // set the position of the text
               fontSize={0.3} // set the font size
               color="yellow" // set the color of the text
               anchorX="center" // set the horizontal alignment
-              anchorY="bottom" // set the vertical alignment
+              anchorY= "25" // set the vertical alignment
               >
                 {chat}
               </Text>            </mesh>
@@ -207,24 +218,19 @@ function AnimatedFBXModel(props) {
       </>
     );
  }
-var importedUsername= 'null';
 function NPC(props){
   const clock3 = useRef(new THREE.Clock());
     const [realPos, setRealPos] = useState([0,0]);
-    const [fbx, setFbx] = useState(null);
     const [first, setFirst] = useState(null);
     const [facing, setFacing] = useState(0);
     const [walkVector, setWalkVector] = useState(null);
     const [positionSnap, setPositionSnap] = useState(null);
     const [distance, setDistance] = useState(0);
     const meshRef = useRef(null);
-    const fbx3 = useLoader(FBXLoader, character);
-    fbx3.scale.set(0.01, 0.01, 0.01);
-    console.log("4$$$$$", fbx3);
+ 
+
   
-  useEffect(() => {
-    new FBXLoader().load(character, setFbx);
-  }, []);
+
   useFrame (({camera}) => {
     if(meshRef != null){
       if(meshRef.current) {
@@ -288,9 +294,6 @@ function NPC(props){
   }
   }, [props.position]);
 
-  if (!fbx) {
-    return null;
-  }
     return(
         <>
             <mesh ref={meshRef} position={[realPos[0],2,realPos[1]]}>
@@ -329,20 +332,15 @@ function Players(props){
             });
         });
         newSocket.on("init_message", (data) => {
-          setDict(prevState => ({ ...prevState, [data[0]]: [0,0] }));
+          setDict(prevState => ({ ...prevState, [data[0]]: [0,0, "Guest"] }));
       });
         newSocket.on("moving_message", (data) => {
-          var temp = dict[data[0]];
-          temp[0] = data[0]
-          temp[1] =data[2]
+          const temp = [data[1], data[2], data[3]];
           const key = data[0]
           setDict(prevState => ({ ...prevState, [key]: temp }));
       });
       newSocket.on("usernamez", (data) => {
-        var temp = dict[data[0]];
-        temp.append(data[1])
-          const key = data[0]
-          setDict(prevState => ({ ...prevState, [key]: temp }));
+          setDict(data);
     });
     }, []);
 
@@ -357,7 +355,6 @@ function Players(props){
     }
     return(
         <>
-      
         {setup && (
   <>
     <User username = {props.username} controlsRef = {props.controlsRef} socket={socket} loadHandler={loadHandler}/>

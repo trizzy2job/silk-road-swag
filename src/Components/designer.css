@@ -1,0 +1,405 @@
+#upCanvas{
+    border: 5px;
+    border-style: solid;
+}
+
+#gameboy{
+    font-family: specMED;
+    display:flex;
+    color:white;
+    border:none;
+}
+
+#leftDesigner{
+    border:none;
+    background-color: var(--quadrinary-color);
+}
+#topDesign{
+    display:flex;
+    background-color: var(--quadrinary-color);
+}
+#pendingImageOption{
+    display: flex;
+}
+
+#actualPImage{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background-color: black;
+}
+
+#pendingImage{
+    border-color:#b801b828;
+    border-width: 10px;
+    top:50%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background-color: black;
+}
+#frontback{
+    margin-right:auto;
+    margin-left:auto;
+    font-family: specMED;
+}
+
+#shirtColorPicker{
+    margin-right:40%;
+    margin-left: 5%;
+    background-color: var(--secondary-color);
+
+}
+#rightDesign2{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    
+}
+
+#rightBackground{
+    contain: content;
+    margin-top: 0vh;
+   /* opacity: 50%; */
+
+   position: absolute;
+ 
+   right: 0%;
+   z-index: 3;
+   margin-left: 5%;
+   border-width: 10px;
+   border-color: var(--tertiary-color);
+   border-style: groove;
+   flex-direction: column;
+   display: flex;
+}
+
+#topOfDesign{
+    contain: content;
+
+   /* opacity: 50%; */
+ 
+
+   position: absolute;
+   z-index: 5;
+   
+   
+   right:40%;
+   flex-direction: column;
+   display: flex;
+   margin-top: 0vh;
+   
+   
+   
+}
+#posGroup{
+   
+    height: 100%;
+    width: 100%;
+}
+#colorPickerWords{
+    margin-right: 0%;
+}
+
+#shirtColorPicker2{
+    
+    display: flex;
+}
+
+#shirtColorPicker3{
+    height:150px;
+    width:80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#modelviewdesign{
+    height:auto;
+    width: 30%;
+
+}
+
+#seeModelButton{
+    height: 20%;
+    width: 50%;
+    margin-right:25%;
+    margin-left:25%;
+    margin-top: 40%;
+    margin-bottom: 40%;
+    font-family: kumarOutline;
+    font-size: 200%;
+}
+
+#bottomDesigner1{
+    contain: content;
+    bottom:0;
+    
+    right: 0;
+   /* opacity: 50%; */
+  
+    
+   position: absolute;
+   z-index: 2;
+  
+  
+   border-color: var(--tertiary-color);
+  
+   flex-direction: column;
+   display: flex;
+}
+
+#rightDesign{
+   
+    display:flex;
+    flex-direction: column;
+    margin-right:auto;
+    margin-left:auto;
+}
+
+#uploadLabel{
+    background-color: beige;
+}
+
+#cancelUpload{
+    display: none;
+}
+
+#rdco{
+    margin-top: 2%;
+    color: var(--secondary-color);
+    font-size: large;
+    margin-right: 5%;
+    margin-bottom: 5%;;
+
+}
+#textupload{
+    display: flex;
+}
+
+/* #fullDesign{
+    height: 100%;
+    margin-top: 0;
+    background-color: red; */
+/* } */
+#dd2model{
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(89.97deg, #be93aa07 1.84%, #746c7428 102.67%);
+    background-position: center;
+    background-size: 2800px 700px;
+    animation: animStar 1.8s linear infinite;
+    z-index: 1;
+   
+}
+
+#blueUp{
+    background-color: var(--quadrinary-color);
+    border-style: solid;
+    border-color: var(--black-color);
+    border-radius: 15px;
+    border-width: 5px;
+    display: flex;
+    color:var(--tertiary-color);
+    margin-bottom:1vh;
+}
+
+#downimage{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right:5%;
+}
+
+#downtext{
+    margin-right: auto;
+    margin-left:auto;
+}
+#arrowB{
+    align-items: center;
+    justify-content: center;
+}
+#arrowS{
+    display: flex;
+    margin-top: 0px;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+#arrowU{
+    display: flex;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#arrowSS{
+    background-color: red;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  
+}
+
+#lbut{
+    transform:rotate(270deg)
+}
+
+#rbut{
+    transform:rotate(90deg)
+}
+
+#dbut{
+    transform:rotate(180deg)
+}
+
+#finishDButton{
+    align-items: center;
+    justify-content: center;
+}
+
+#rightImage{
+    contain: content;
+    margin-top: 10vh;
+   /* opacity: 50%; */
+
+   position: absolute;
+ 
+   right: 0%;
+   z-index: 3;
+   margin-left: 5%;
+   border-width: 10px;
+   border-color:rgb(242, 192, 255);
+   border-style: groove;
+   flex-direction: column;
+   display: flex;
+}
+
+#imgselect{
+    contain: content;
+    background-color:#d71f8107;
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: purple;
+    width:fit-content;
+    
+}
+
+#smallImage{
+    width:50%;
+    height:10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+
+#modelBackground{
+contain: content;
+ margin-top: 20vh;
+   /* opacity: 50%; */
+
+    width: 20%;
+   position: absolute;
+   z-index: 2;
+  
+   border-width: 15px;
+   border-color: var(--tertiary-color);
+   border-style: groove;
+   
+   flex-direction: column;
+   display: flex;
+   
+   
+   
+}
+#checkCamera{
+    background-color: red;
+    width: 70%;
+}
+#scene0{
+
+}
+
+#realControls{
+    background-color: purple;
+    height: 100%;
+    width: 20%;
+    z-index: 2;
+}
+
+#imgBox{
+    background-color: aqua;
+    display: flex;
+    flex-direction: row;
+    border-color: purple;
+    border-radius: 15px;
+    border-width: 10px;
+    width:100%;
+    
+   
+
+}
+
+
+body {
+    background: #000;
+  }
+  
+  /* h1 { */
+    /* color: #fff;
+    margin-bottom: 60px;
+    font-family: helvetica;
+    font-size: 56px;
+    font-style: italic;
+    letter-spacing: 2px;
+  } */
+  
+  .slider {
+    -webkit-appearance: none;
+    width: 50%;
+    height: 15px;
+    background: #000;
+    outline: none;
+    border: 5px solid var(--primary-color);
+    border-radius: 8px;
+  }
+  
+  
+  /* for chrome/safari */
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 25px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid var(--primary-color);
+    border-radius: 4px;
+  }
+  
+  /* for firefox */
+  .slider::-moz-range-thumb {
+    width: 20px;
+    height: 25px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid var(--primary-color);
+    border-radius: 4px;
+  }
+
+#imgNum{
+    font-size: 10px;
+} 
