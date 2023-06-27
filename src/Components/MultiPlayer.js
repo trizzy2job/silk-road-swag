@@ -15,6 +15,7 @@ function AnimatedFBXModel(props) {
     const [fbx2, setFbx2] = useState(null);
     const [mixes, setMixer] = useState(null);
     const [mixes2, setMixer2] = useState(null);
+    
     const mixerRef = useRef();
     const mixerRef2 = useRef();
     useEffect(() => {
@@ -89,12 +90,17 @@ function AnimatedFBXModel(props) {
     );
   }
 
-
-
-
-  function User(props) {
+    function User(props) {
+      const [vary, setVary] = useState(0);
+    if(vary==0 && props.socket && props.username){
+      props.socket.emit("send_username", props.username);
+      setVary(vary +1)
+  }
     function Chatz() {
-      var string = " ";
+      var hack = 0
+      var string = "..." ;
+      let element = document.getElementById('root');
+
       function handleKeyDown(event) {
         console.log(event.key); // Outputs the pressed key to the console
         setChat("~ ~ ~")
@@ -104,13 +110,18 @@ function AnimatedFBXModel(props) {
           // Perform desired actions when 'Enter' key is pressed
           console.log('Enter key pressed!');
           setChat(string)
-          string = " "
+          string = ""
         }
-        if (event.key === 'Backspace'){
+        else if (event.key === 'Backspace'){
           
           string = string.split()
         }
-        string += event.key.toString();
+        else if (hack < 2) {
+          element.dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}));
+          element.dispatchEvent(new KeyboardEvent('keydown', {'key': 'a'}));
+          string += event.key.toString();
+  hack++;
+        }
         
       }
       
@@ -145,9 +156,8 @@ function AnimatedFBXModel(props) {
         setFacing(tempFacing);
         setMoving(true);
         if(props.socket){
-            props.socket.emit("send_message", [x,z]);
+            props.socket.emit("send_message", [x,z])
         }
-        
       }
   }
 
@@ -176,7 +186,6 @@ function AnimatedFBXModel(props) {
         }
       }
     });
-
     return (
       <>
           <Floor updateLocation={handleClick}/> 
@@ -189,14 +198,14 @@ function AnimatedFBXModel(props) {
               anchorX="center" // set the horizontal alignment
               anchorY="middle" // set the vertical alignment
               >
-                {props.username}
+                {props.username ? props.username : "Guest"}
               </Text>
               <Text
                // set the position of the text
               fontSize={0.3} // set the font size
               color="yellow" // set the color of the text
               anchorX="center" // set the horizontal alignment
-              anchorY="bottom" // set the vertical alignment
+              anchorY= "25" // set the vertical alignment
               >
                 {chat}
               </Text>            </mesh>
@@ -208,8 +217,7 @@ function AnimatedFBXModel(props) {
           }
       </>
     );
-  }
-
+ }
 function NPC(props){
   const clock3 = useRef(new THREE.Clock());
     const [realPos, setRealPos] = useState([0,0]);
@@ -271,6 +279,7 @@ function NPC(props){
     var real = realPos;
     //put him at the right start place
    
+   
     if(positionSnap != null){
         setRealPos(positionSnap);
         real = positionSnap;
@@ -295,7 +304,7 @@ function NPC(props){
               anchorX="center" // set the horizontal alignment
               anchorY="middle" // set the vertical alignment
               >
-                {props.socketCon}
+                {props.username}
               </Text>
             </mesh>
           <AnimatedFBXModel isWalking={realPos != props.position} position={[realPos[0],-1,realPos[1]]} rotation ={[0,3.1415/2 - facing,0]} loadHandler={props.loadHandler}/>
@@ -324,15 +333,16 @@ function Players(props){
             });
         });
         newSocket.on("init_message", (data) => {
-          setDict(prevState => ({ ...prevState, [data[0]]: [0,0] }));
+          setDict(prevState => ({ ...prevState, [data[0]]: [0,0, "Guest"] }));
       });
         newSocket.on("moving_message", (data) => {
-
-          const temp = [data[1], data[2]];
+          const temp = [data[1], data[2], data[3]];
           const key = data[0]
           setDict(prevState => ({ ...prevState, [key]: temp }));
       });
-      
+      newSocket.on("usernamez", (data) => {
+          setDict(data);
+    });
     }, []);
 
     function loadHandler() {
@@ -346,14 +356,14 @@ function Players(props){
     }
     return(
         <>
-          {setup && (
-            <>
-              <User username = {props.username} controlsRef = {props.controlsRef} socket={socket} loadHandler={loadHandler}/>
-              {Object.entries(dict).map(([key, value], index) => (
-                <NPC key={`NPC-${key}`} position={value} socketCon={key} loadHandler={loadHandler} />
-              ))}
-            </>
-          )}
+        {setup && (
+  <>
+    <User username = {props.username} controlsRef = {props.controlsRef} socket={socket} loadHandler={loadHandler}/>
+    {Object.entries(dict).map(([key, value]) => (
+      <NPC key={`NPC-${key}`} position={[value[0],value[1]]} socketCon={key} loadHandler={loadHandler} username={value[2]} />
+    ))}
+  </>
+)}
         </>
     )
 }
