@@ -1,0 +1,208 @@
+#form{
+    text-align: center;
+font-family:spectralMed;  
+  color:var(--tertiary-color);
+    display:block;
+    margin-right:auto;
+    font-size:1.5em;
+    
+
+}
+#in{
+    width:31em;
+    padding:1.5vh;
+    margin-bottom:3vh;
+    border-radius: 25px;
+}
+#ni{
+    width:35%;
+    padding:1.6vh;
+    border-radius: 25px;
+    display: grid;
+    place-content: right;
+    font-family:kumar;
+    letter-spacing: 2px;
+    font-style: italic;
+    margin-left:32.5%;
+    margin-bottom:15vh;
+}
+#t,h1{
+    font-family: kumar;
+    text-align:center;
+    color:rgb(255, 255, 255);
+    display:block;
+    margin:auto;
+    font-size:3.4em;
+}
+#t{
+    font-family:kumarOutline;
+}
+#n{
+
+    margin-left:40px;
+    margin-bottom:7vh;
+}
+#sex{
+    font-family: spectralMed;
+
+    text-align:center;
+    color:rgb(255, 255, 255);
+    display:inline-flex;
+    font-size:1.2em;
+}
+#l{
+    font-family: spectralMed;
+    text-align:center;
+    color:var(--tertiary-color);
+    font-size:1.2em;
+    
+}
+button{
+    background-color:var(--tertiary-color);
+}
+
+#totalGuide{
+    display:inline-flex;
+    margin-left: 5%;
+    margin-right: 5%;
+    background-color:var(--tertiary-color);
+    border-style: dashed;
+    border-radius:15px;
+    border-width: 10px;
+    border-color: white;
+}
+#ggbiggest{
+    background-color: rgba(165, 165, 165, 0.1);
+    color: black;
+}
+#submissionDisplayedInSubmitPage{
+    /* background-image:url("../../assets/loading.png"); */
+    background-size:500px;
+    width:500px;
+    height:500px;
+}
+#submissionDisplayedInSubmitPage{
+    margin:auto;
+        padding:1vh;
+    background-color: var(--secondary-color);
+    margin-bottom: 3vh;
+}
+#secondguide{
+    display:flex;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 2%;
+    border-style: dotted;
+    border-radius:15px;
+    border-width: 10px;
+    border-color: white;
+    background-color:var(--tertiary-color);
+}
+
+#g2left{
+    width:50%;
+    margin-left:5%;
+    margin-right: 5%;
+}
+
+#g2right{
+    width:50%;
+    margin-right:5%;
+}
+
+#pinad{
+    background-color:var(--secondary-color);
+    display: flex;
+    text-align: center;
+    border-radius: 15px;
+    margin-right: 5px;
+}
+
+#pppinned{
+    width: 100%;
+}
+
+
+#ff1{
+    margin-left:auto;
+    margin-right:auto;
+}
+#spacer{
+    height:20vh;
+}
+#spacer2{
+    height:5vh;
+}
+#ff2{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#creating{
+    margin-right:5%;
+}
+
+#creating2{
+    font-family: specMED;
+    width:50%;
+    background-color:var(--tertiary-color);
+    margin-right:5%;
+    margin-left:5%;
+}
+#whyipfs{
+    text-align: center;
+    background-color:var(--tertiary-color);
+    
+    margin-right:5%;
+    margin-left:5%;
+    margin-bottom:3%;
+    border-radius: 15px;
+}
+
+#linkspecs{
+    text-align: center;
+    margin-left:auto;
+    margin-right: auto;
+    border-radius: 15px;
+    margin-bottom: 0vh;
+}
+#thirdguide{
+    background-color:var(--secondary-color);
+    text-align: center;
+    margin-right: 5%;
+    margin-left: 5%;
+    border-radius: 15px;
+}
+
+#frandb{
+    margin-left:auto;
+    display: flex;
+    margin-right:auto;
+}
+#gleft{
+    width:50%;
+    margin-left:5%;
+}
+
+#folder1{
+    width:100%;
+}
+
+@media screen and (max-width: 1350px) {
+    #t{
+        font-size: 2em;
+    }
+    #form{
+        margin-top: -5vh;
+        margin-bottom:10vh;
+    }
+    #s{
+        text-align: center;
+    }
+    #in{
+        width: 78vw;
+    }
+
+  }
+
+  

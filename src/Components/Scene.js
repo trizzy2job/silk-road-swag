@@ -31,7 +31,7 @@ function Scene(props) {
         <Canvas shadowMap shadows ref={canvasRef} style={{ width: '100%', height: window.innerHeight - 50 }}>
           <SkyBox urls={urls} />
           <Box position={[-20, 0, 0]} width={10} height={10} depth={10} color={'red'} rotation={0} />
-          <Box position={[20, 0, 0]} width={10} height={10} depth={10} color={'purple'} rotation={0} />
+          <Box position={[20, 0, 0]} width={10} height={10} depth={10} color={'purple'} rotation={0} onClick={()=>{window.location.href = "../Design"}}/>
           <Box position={[0, 0, 20]} width={10} height={10} depth={10} color={'green'} rotation={0} />
           <Box position={[0, 0, -20]} width={10} height={10} depth={10} color={'yellow'} rotation={0} />
           <directionalLight

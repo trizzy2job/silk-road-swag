@@ -313,6 +313,7 @@ function Players(props){
         const newSocket = io.connect("http://localhost:3002");
         setSocket(newSocket);
         newSocket.on("welcome", (data) => {
+          console.log("dict welcomed: ", Object.entries(data))
           setDict(data);
           setSetup(true);
         });

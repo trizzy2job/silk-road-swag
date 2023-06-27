@@ -4,6 +4,7 @@ import Home from './Pages/Home';
 import About from './Pages/About';
 import Vote from './Pages/Vote';
 import Design from './Pages/Design';
+import Submit from './Pages/Submit';
 function Routesz() {
   return (
     <Routes>
@@ -11,6 +12,7 @@ function Routesz() {
       <Route path="/vote" element={<Vote />} />
       <Route path="/about" element={<About />} />
       <Route path="/design" element={<Design />} />
+      <Route path="/submit" element={<Submit/>} />
           </Routes>
   );
 }

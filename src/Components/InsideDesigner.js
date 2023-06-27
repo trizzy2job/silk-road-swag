@@ -42,51 +42,6 @@ import { LightFixt, MetalBase, LightFixtB, NeonSign } from './Assets';
 
 // }
 
-function ScreenshotButton({ ...props }) {
-  const { gl, scene, camera } = useThree()
-
-  async function ScreenShot() {
-    console.log(gl)
-    gl.render(scene, camera)
-    gl.toneMapping = THREE.ACESFilmicToneMapping
-    gl.toneMappingExposure = 0.6
-    gl.outputEncoding = THREE.sRGBEncoding
-    gl.preserveDrawingBuffer = true
-    gl.domElement.toBlob(
-      async function(blob) {
-        // var a = document.createElement('a')
-        // var url = URL.createObjectURL(blob)
-        // a.href = url
-        // a.download = 'SRSDesign.jpg'
-        // a.click()
-        // await (infura(blob)).then((res) => {
-        //   console.log("before: "+res);
-        var image = new Image();
-        image.src = URL.createObjectURL(blob);
-        props.parent(image.src);
-        // });
-      }
-      // 'image/jpg',
-      
-    )
-    
-  }
-
-  return (
-    <sprite {...props} scale={[100, 100, 100]} onClick={ScreenShot}>
-      <spriteMaterial
-        attach="material"
-        color={'red'}
-        depthWrite={false}
-        depthTest={false}
-        renderOrder={10000}
-        fog={false}
-        onClick={ScreenShot}
-      />
-    </sprite>
-  )
-}
-
 function RGBBars(props){
     const rV = parseInt(props.color[1]+props.color[2],16) / 255.0;
     const gV = parseInt(props.color[3]+props.color[4],16) / 255.0;
@@ -163,9 +118,6 @@ function GroundPlane() {
       </mesh>
     );
   }
-
-  
-
   function BottomC(){
     const geometry = new THREE.CylinderGeometry( 75, 75, 10, 32 );
       return(
@@ -207,17 +159,6 @@ function GroundPlane() {
             </mesh>
       )
   }
-
-//   function BackDrop2() {
-//     return (
-//       <mesh receiveShadow rotation = {[3.14,0,0]}position={[0, 0, 0]}>
-//         <planeBufferGeometry attach="geometry" args={[500, 500]} />
-//         <meshStandardMaterial attach="material" color="blue" />
-//       </mesh>
-//     );
-//   }
-
-
   function BackDrop3(props) {
     var temp = colorBack;
     // if (props.scene == 1){
@@ -237,11 +178,6 @@ function GroundPlane() {
     );
   }
   function Wallc2r(props) {
-    // var temp = colorBack;
-    // if (props.scene == 1){
-    //     temp = silk;
-    //   }
-    //   const colorBackT = useTexture(temp);
     return (
       <mesh receiveShadow rotation = {[0,0,3.14/2]}position={[250, 125, -500]}>
         <planeBufferGeometry attach="geometry" args={[250, 500]} />
@@ -260,158 +196,133 @@ function GroundPlane() {
   }
   
   
-  function PixelRow(props){
-    const begin = []
-    for (var i = 0; i < props.cols; i++)
-    {
-      begin.push(0);
-    }
-    const [brightness, setBrightness] = useState(begin);
-    const height = 500/brightness.length;
-    const ycoord = 10;
-    const startz = 0;
-    
-    useFrame((state) => {
-      const fractionalPos = Math.floor(state.camera.position.z / -height);
-      const brightness_temp = brightness;
-      for(let i = 0; i<brightness_temp.length; i++){
-            if (brightness_temp[i] > 0){
-            brightness_temp[i] -= 0.05;
-            }
-        }
-      if (props.active){
-          brightness_temp[fractionalPos] = 11;
-          if(fractionalPos > 0){
-              brightness_temp[fractionalPos-1] = 11;
-          }
-          if(fractionalPos <brightness.length-1){
-              brightness_temp[fractionalPos+1] = 11;
-          }
-      
-        
-      } 
-      setBrightness(brightness_temp);
-      })
-    return(
-        <>
-        {
-      brightness.map((color, index)=>{
-          const zcoord = (-height/2)-(index * height);  //zcoord of middle of tile
-          
-          return(
-            <mesh key={"pixelMesh" + index}receiveShadow rotation={[-3.1415/2, 0, 0]} position={[props.xcoord, ycoord, zcoord + startz]}>
-                <planeBufferGeometry key={"geometry" + index} attach="geometry" args={[props.xdir, height]}  />
-                <meshStandardMaterial  key={"standardMesh" + index} attach="material" color={[color+5,0,20]}  />
-                {/* {(zcoord - height/2 < cameraZ < zcoord + height/2) ?  */}
-                {/* <meshStandardMaterial attach="material" color="aquamarine"  />  */}
-                {/* <meshStandardMaterial emissive={"white"} emissiveIntensity={brightness[index]} key={"standardMesh" + index} attach="material" color={color}  /> */}
-            </mesh>
-          )
-        })}
-      </>
-      )
+function PixelRow(props){
+  const begin = []
+  for (var i = 0; i < props.cols; i++)
+  {
+    begin.push(0);
   }
-
-  function PixelScreen(props){
-      const listActive =[];
-      for(var i = 0; i < 15; i++ ){
-        listActive.push(false);
-      }
-      const xdir = 500 / listActive.length;
-      const [rows, setRows] = useState([]);
-      useFrame((state) => {
-        const fractionalPos = Math.floor(state.camera.position.x / xdir);
-        listActive[fractionalPos] = true;
-        if(fractionalPos > 0){listActive[fractionalPos-1] = true;} 
-        if(fractionalPos < listActive.length-1){listActive[fractionalPos+1] = true;}
-        setRows(listActive);
-        
-    })
-      return(
-        <>
-          {
-            rows.map((status, index)=>{
-              return(
-              <PixelRow key={"pixelRow: "+index}active={status} xcoord={0+ index*xdir} xdir={xdir} cols={15}/>
-              )
-            })
-          }
-        </>
-      )
-  }
-       
-
+  const [brightness, setBrightness] = useState(begin);
+  const height = 500/brightness.length;
+  const ycoord = 10;
+  const startz = 0;
   
+  useFrame((state) => {
+    const fractionalPos = Math.floor(state.camera.position.z / -height);
+    const brightness_temp = brightness;
+    for(let i = 0; i<brightness_temp.length; i++){
+          if (brightness_temp[i] > 0){
+          brightness_temp[i] -= 0.05;
+          }
+      }
+    if (props.active){
+        brightness_temp[fractionalPos] = 11;
+        if(fractionalPos > 0){
+            brightness_temp[fractionalPos-1] = 11;
+        }
+        if(fractionalPos <brightness.length-1){
+            brightness_temp[fractionalPos+1] = 11;
+        }
+    
+      
+    } 
+    setBrightness(brightness_temp);
+    })
+  return(
+      <>
+      {
+    brightness.map((color, index)=>{
+        const zcoord = (-height/2)-(index * height);  //zcoord of middle of tile
         
-  function BackDrop3b() {
-    return (
-      <mesh receiveShadow rotation = {[0,-3.14/2,3.14/2]}position={[0, 0, 0]}>
-        <planeBufferGeometry attach="geometry" args={[1000, 1000]} />
-        <meshStandardMaterial attach="material" color="pink" />
+        return(
+          <mesh key={"pixelMesh" + index}receiveShadow rotation={[-3.1415/2, 0, 0]} position={[props.xcoord, ycoord, zcoord + startz]}>
+              <planeBufferGeometry key={"geometry" + index} attach="geometry" args={[props.xdir, height]}  />
+              <meshStandardMaterial  key={"standardMesh" + index} attach="material" color={[color+5,0,20]}  />
+              {/* {(zcoord - height/2 < cameraZ < zcoord + height/2) ?  */}
+              {/* <meshStandardMaterial attach="material" color="aquamarine"  />  */}
+              {/* <meshStandardMaterial emissive={"white"} emissiveIntensity={brightness[index]} key={"standardMesh" + index} attach="material" color={color}  /> */}
+          </mesh>
+        )
+      })}
+    </>
+    )
+}
+
+function PixelScreen(props){
+    const listActive =[];
+    for(var i = 0; i < 15; i++ ){
+      listActive.push(false);
+    }
+    const xdir = 500 / listActive.length;
+    const [rows, setRows] = useState([]);
+    useFrame((state) => {
+      const fractionalPos = Math.floor(state.camera.position.x / xdir);
+      listActive[fractionalPos] = true;
+      if(fractionalPos > 0){listActive[fractionalPos-1] = true;} 
+      if(fractionalPos < listActive.length-1){listActive[fractionalPos+1] = true;}
+      setRows(listActive);
+      
+  })
+    return(
+      <>
+        {
+          rows.map((status, index)=>{
+            return(
+            <PixelRow key={"pixelRow: "+index}active={status} xcoord={0+ index*xdir} xdir={xdir} cols={15}/>
+            )
+          })
+        }
+      </>
+    )
+}
+
+function BackDrop3b() {
+  return (
+    <mesh receiveShadow rotation = {[0,-3.14/2,3.14/2]}position={[0, 0, 0]}>
+      <planeBufferGeometry attach="geometry" args={[1000, 1000]} />
+      <meshStandardMaterial attach="material" color="pink" />
+    </mesh>
+  );
+  }
+
+function Startbuttone(){
+  return (
+      
+      <mesh position={[500,30,0]}>
+          <Html transform position={[0,0,0]} height={400} width={200}>
+          <div>
+              <div id="startbuttonDiv">
+                  <h1 id="startbuttonscript">Pick Your Shirt Color</h1>
+              </div>
+          </div>
+      </Html >
       </mesh>
     );
   }
 
-  function Startbuttone(){
-    //   console.log("start");
-    return (
-        
-        <mesh position={[500,30,0]}>
-            <Html transform position={[0,0,0]} height={400} width={200}>
+function Startbuttone2(){
+  return (
+      <mesh position={[0,30,-500]}  rotation={[0,3.14/2,0]}>
+          <Html transform position={[0,0,0]} height={400} width={200} >
             <div>
                 <div id="startbuttonDiv">
-                    <h1 id="startbuttonscript">Pick Your Shirt Color</h1>
+                    <h1 id="startbuttonscript">Style your shirt</h1>
                 </div>
             </div>
         </Html >
-        </mesh>
-      );
-  }
-
-  function Startbuttone2(){
-    // console.log("start");
-  return (
-      
-      <mesh position={[0,30,-500]}  rotation={[0,3.14/2,0]}>
-          <Html transform position={[0,0,0]} height={400} width={200} >
-          <div>
-              <div id="startbuttonDiv">
-                  <h1 id="startbuttonscript">Style your shirt</h1>
-              </div>
-          </div>
-      </Html >
       </mesh>
-    );
-}
-
-function Startbuttone3(){
-    // console.log("start");
-  return (
-      
-      <mesh position={[-500,30,0]}  rotation={[0,3.14,0]}>
-          <Html transform position={[0,0,0]} height={400} width={200} >
-          <div>
-              <div id="startbuttonDiv">
-                  <h1 id="startbuttonscript">Time to submit</h1>
-                  <h1 id="startbuttonscript">Add a watermark?</h1>
-              </div>
-          </div>
-      </Html >
-      </mesh>
-    );
+  );
 }
 
 export function BasicShirtDisplaySill(prop){
     const [yrot, setYRot] = useState(1);
     const [realFbx, setRealFbx] = useState(null);
     const [x, setx] = useState(125);
-    const [y, sety] = useState(10);
     const [z, setz] = useState(125);
     const { gl, scene, camera } = useThree()
     useFrame((state) => {
-          
         if(prop.scene == 0){setYRot(yrot+1)};
-        if(prop.move && prop.scene==1 && z>-250){
+        if(prop.scene==1){
             setz(-250);
             setx(50);
             setYRot(-92);
@@ -432,8 +343,9 @@ export function BasicShirtDisplaySill(prop){
             setRealFbx(realFbx);
         }
           },[prop.itemt]);
+
     function screenShot(){
-      if(prop.readyForScreenShot)
+      if(prop.scene == 2)
         console.log("buttered up for a screenshot");
         gl.render(scene, camera)
         gl.toneMapping = THREE.ACESFilmicToneMapping
@@ -442,36 +354,19 @@ export function BasicShirtDisplaySill(prop){
         gl.preserveDrawingBuffer = true
         gl.domElement.toBlob(
           async function(blob) {
-            // var a = document.createElement('a')
-            // var url = URL.createObjectURL(blob)
-            // a.href = url
-            // a.download = 'SRSDesign.jpg'
-            // a.click()
-            // await (infura(blob)).then((res) => {
-            //   console.log("before: "+res);
             var image = new Image();
             image.src = URL.createObjectURL(blob);
             prop.parent(image.src);
-            // });
           }
-          // 'image/jpg',
           
         )
     }
-    // const fbx = useLoader(OBJLoader, shirtTwo);
-   
-   // I've used meshPhysicalMaterial because the texture needs lights to be seen properly.
    if (!realFbx){
     return null;
    }
    return (
        <>
-       <primitive object={realFbx} position={[x+200 ,y, z]} rotation-y={Math.PI * 0.005*yrot} onClick={screenShot}/>
-     {/* <mesh rotation-y={Math.PI * 0.005*yrot} name={prop.name} castShadow position={[x+200 ,y, z]}geometry={geometry} >
-      
-       <meshStandardMaterial map={texture}
-        />
-     </mesh> */}
+       <primitive object={realFbx} position={[x+200 ,10, z]} rotation-y={Math.PI * 0.005*yrot} onClick={screenShot}/>
      </>
    )
  }
@@ -551,49 +446,31 @@ export const InsideDesigner= (props) => {
           <CameraController0/>
           <ColorMaker color={props.color}/>
           <Startbuttone />
-         
-          <ambientLight intensity={0.2} color={"white"} />
-          {/* <ambientLight intensity={0.2} color={props.color} /> */}
         </>
-        : null}
-        
-      {/* Second Room */}
-        {props.scene > 0  ?
-            <>
-            <ambientLight intensity={0.5} color={"white"} />
-                <CameraController1 />
-                <LightFixtB center={[250,100,-250]} scene={props.scene}/>
-                {/* <MetalBase /> */}
-                <NeonSign />
-                
-                <Wallc2b />
-                <Startbuttone2 />
-                <PixelScreen />
-                {/* <ambientLight /> */}
-            </>
-        : null}
-        {props.scene == 2 ?
-          <ScreenshotButton parent={props.parent}/>
-       : null}
-        <>
+        : 
+        // second room
+        <>    
+          <CameraController1 />
+          <LightFixtB center={[250,100,-250]} scene={props.scene}/>
+          {/* <MetalBase /> */}
+          <NeonSign />
+          
+          <Wallc2b />
+          <Startbuttone2 />
+          <PixelScreen />
+        </>
+        }
 
         {/* Building structure */}
-            <GroundPlane />
-            <Roof />
-            <BackDrop scene={props.scene} />
-            <BackDropb />
-            <BackDrop3b />
-            <Wallc2r />
-            {/* <Wallc2b /> */}
-            <BackDrop3 scene={props.scene} />
-        </>
-        
-        
-        <BasicShirtDisplaySill move={props.move} scene={props.scene} itemt={props.src} name="joker design" readyForScreenShot={props.scene==2} parent={props.parent}/>
-        {/* <BackDrop2/> */}
-        
-        
-       {/* <OrbitControls target={cameraTarget} emabled={false}/> */}
+        <ambientLight intensity={0.5} color={"white"} />
+        <GroundPlane />
+        <Roof />
+        <BackDrop scene={props.scene} />
+        <BackDropb />
+        <BackDrop3b />
+        <Wallc2r />
+        <BackDrop3 scene={props.scene} />
+        <BasicShirtDisplaySill scene={props.scene} itemt={props.src} name="joker design" parent={props.parent}/>
     </Canvas>
   </Suspense>
 
