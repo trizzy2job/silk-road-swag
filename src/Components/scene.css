@@ -1,0 +1,14 @@
+#chatInput{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+
+    height:5%;
+}
+
+#chats{
+    display: flex;
+    flex-direction: column;
+
+    height:80%;
+}

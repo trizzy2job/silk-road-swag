@@ -10,7 +10,7 @@ const USER_REGEX = /^[A-z][A-z0-9-_]{1,32}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 function AuthOverlay(props) {
-  const [doneLoad, setDoneLoad] = useState(false);
+
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showLoginButton, setShowLoginButton] = useState(false);
@@ -27,7 +27,6 @@ function AuthOverlay(props) {
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
   const [wallet, setWallet] = useState('');
-  const [username, setUsername] = useState('');
   const [link, setLink] = useState('Connect');
   const handleLoginSecond= async (e) => {
     e.preventDefault();
@@ -39,7 +38,6 @@ function AuthOverlay(props) {
     setLink("Connected! Click Here To Continue");
     connection();
 }
-const connectionProxy = async () => {connection()}
 const connection = async () => {
   const response = await axios.post("http://localhost:3500/auth",
                JSON.stringify({wallet}),
@@ -49,18 +47,12 @@ const connection = async () => {
               })
               );
       console.log(response);
-    await(setUsername(response.data.name), props.update(response.data.name), setLink("Connected!"));
-    if(props.username !== ''){
-      setShowOverlay(false);
-    }
-    else(
-      connection()
-    )
-  } 
-const handleLogout = () => {
-setUser(false);
-}
+    props.update(response.data.name);
+    console.log("allowed")
+  
+    setLink("Connected!")
 
+  } 
 
   async function getAccount(){
     if(!window.ethereum){setConnected("Please install Metamask"); console.log("Window.ethereum error")}
@@ -82,22 +74,10 @@ useEffect(() => {
 useEffect(() => {
     setValidEmail(EMAIL_REGEX.test(email));
 }, [email])
-useEffect(() => {
-  if (props.progress === 100) {
-    const timer = setTimeout(() => {
-      console.log('Message after 5 seconds');
-      setDoneLoad(true);
-    }, 3000); // 5000 milliseconds = 5 seconds
 
-    return () => clearTimeout(timer);
-  }
-}, [props.progress]);
 useEffect(() => {
     setErrMsg('');
 }, [user, email])
-  const handleContinueAsGuest = () => {
-    handleBack();
-  };
   const handleSubmit = async () => {
     // if button enabled with JS hack
     const v1 = USER_REGEX.test(user);
@@ -167,8 +147,10 @@ if (!v2) {
     setShowRegisterForm(false);
   };
   const handleContinueAsGuestClick = () => {
-    setShowOverlay(false);
-    setShowLoginButton(true);
+    console.log("allowed")
+    props.update("Guest")
+
+ 
   };
   return (
     <>
@@ -190,46 +172,8 @@ if (!v2) {
         )}
       </ul>
     </nav>
-    {showOverlay && !doneLoad && (
-      <div className="overlay">
-      <div className="modal">
-        <div
-          style={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '33%',
-            padding: '10px',
-            textAlign: 'center',
-            zIndex: '9999', // Higher z-index value to appear in front
-          }}
-        >
-          <div
-            style={{
-              width: '100%',
-              height: '20px',
-              background: 'white',
-              borderRadius: '5px',
-              overflow: 'hidden',
-              animation: 'glow 2s ease-in-out infinite',
-            }}
-          >
-            <div
-              style={{
-                width: `${props.progress}%`,
-                height: '100%',
-                background: 'purple',
-              }}
-            ></div>
-          </div>
-          <div style={{ marginTop: '10px', color: 'purple' }}>
-            Loading... {props.progress}%
-          </div>
-        </div>
-        </div></div>
-      )}
-    {showOverlay && doneLoad &&(
+  
+   
     <div className="overlay" width = '50%'>
       <div className="modal">
         {!showLoginForm && !showRegisterForm && (
@@ -287,7 +231,7 @@ if (!v2) {
         )}
       </div>
     </div>
-    )}
+    
     </>
   );
   
