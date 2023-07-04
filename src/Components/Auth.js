@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {useRef,useEffect} from 'react';
-
 import '../CSS/menu.css'
 import { Link } from 'react-router-dom';
 import Web3 from "web3";
@@ -30,14 +29,65 @@ function AuthOverlay(props) {
   const [link, setLink] = useState('Connect');
   const handleLoginSecond= async (e) => {
     e.preventDefault();
-    const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
+    try{
+      const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
     console.log(accounts)
     setUserAddress(accounts[0])
     window.accounts = accounts
     setWallet(accounts[0]);
     setLink("Connected! Click Here To Continue");
     connection();
-}
+    }
+    catch{
+      navigator.saysWho = (() => {
+        const { userAgent } = navigator
+        let match = userAgent.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []
+        let temp
+      
+        if (/trident/i.test(match[1])) {
+          temp = /\brv[ :]+(\d+)/g.exec(userAgent) || []
+      
+          return `IE ${temp[1] || ''}`
+        }
+      
+        if (match[1] === 'Chrome') {
+          temp = userAgent.match(/\b(OPR|Edge)\/(\d+)/)
+      
+          if (temp !== null) {
+            return temp.slice(1).join(' ').replace('OPR', 'Opera')
+          }
+      
+          temp = userAgent.match(/\b(Edg)\/(\d+)/)
+      
+          if (temp !== null) {
+            return temp.slice(1).join(' ').replace('Edg', 'Edge (Chromium)')
+          }
+        }
+      
+        match = match[2] ? [ match[1], match[2] ] : [ navigator.appName, navigator.appVersion, '-?' ]
+        temp = userAgent.match(/version\/(\d+)/i)
+      
+        if (temp !== null) {
+          match.splice(1, 1, temp[1])
+        }
+      
+        return match.join(' ')
+      })()
+      
+      console.log(navigator.saysWho)
+    
+    } 
+    if(navigator.saysWho){
+    let words = navigator.saysWho
+
+    if (words.includes('Chrome'))
+        setErrMsg("Please intall Metamask and register your wallet")
+    else
+    setErrMsg("Please use Chrome web browser with Metamask and register your wallet")
+
+    }
+  }
+
 const connection = async () => {
   const response = await axios.post("http://localhost:3500/auth",
                JSON.stringify({wallet}),
@@ -145,6 +195,7 @@ if (!v2) {
   const handleBack = () => {
     setShowLoginForm(false);
     setShowRegisterForm(false);
+    setErrMsg("")
   };
   const handleContinueAsGuestClick = () => {
     console.log("allowed")
@@ -196,6 +247,9 @@ if (!v2) {
         {showLoginForm && (
           <>
   <h2 className="auth-form__title">Login</h2>
+  <div className="auth-form__group">
+    <h2 id = "authErr">{errMsg}</h2>
+  </div>
   <div className="auth-form__group">
     <button id ="forms" class="button" type="submit" className="auth-form__button" onClick={handleLoginSecond}>{link}</button>
   </div>
