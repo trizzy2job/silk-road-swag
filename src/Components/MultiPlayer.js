@@ -313,20 +313,43 @@ function Players(props){
     useEffect(() => {
         const newSocket = io.connect("http://localhost:3002?username="+props.username);
         setSocket(newSocket);
+        props.setSocket(newSocket)
         newSocket.on("welcome", (data) => {
           setDict(data[0]);
           setSetup(true);
           setUsers(data[1])
+          props.setChat(data[2])
         });
         newSocket.on("removePlayer", (data) => {
           setDict(prevState => {
-              const { [data]:_, ...newState } = prevState;
+              const { [data[0]]:_, ...newState } = prevState;
               return newState;
             });
+          props.setChat((prevChats) => {
+              const updatedChats = [...prevChats];
+              updatedChats.shift();
+              updatedChats.push(data[1] + " just left");
+              return updatedChats;
+            });
+        });
+        newSocket.on("newChat", (data) => {
+          console.log("chat received")
+          props.setChat((prevChats) => {
+            const updatedChats = [...prevChats];
+            updatedChats.shift();
+            updatedChats.push(data[0] + ": " + data[1]);
+            return updatedChats;
+          });
         });
         newSocket.on("init_message", (data) => {
           setDict(prevState => ({ ...prevState, [data[0]]: [0,0] }));
           setUsers(prevState => ({ ...prevState, [data[0]]: data[1] }));
+          props.setChat((prevChats) => {
+            const updatedChats = [...prevChats];
+            updatedChats.shift();
+            updatedChats.push(data[1] + " just joined");
+            return updatedChats;
+          });
       });
         newSocket.on("moving_message", (data) => {
           console.log("Users:", users[data[0]]);
