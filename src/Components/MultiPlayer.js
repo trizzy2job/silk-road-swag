@@ -120,17 +120,66 @@ function AnimatedFBXModel(props) {
     const [chat, setChat] = useState('');
     Chatz();
     const meshRef = useRef();
+    
     const [userX, setUserX] = useState(0);
     const [userZ, setUserZ] = useState(0);
     const [targetX, setTargetX] = useState(0);
     const [targetZ, setTargetZ] = useState(0);
     const [moving, setMoving] = useState(false);
     const [facing, setFacing] = useState(3.1415/3);
+    const [pendingWindow, setPendingWindow] = useState("")
     const clock = new THREE.Clock();
     //Restart the clock when the User is rerendered. Everytime a new move instruction occurs, a rerender is triggered.
     clock.start();
-    
+    useEffect(() => {
+      if (props.command == "Design Studio"){
+        const dx = 12
+        const dz = 0
+        setTargetX(dx)
+        setTargetZ(dz)
+        var tempFacing = 0;
+        if (dx-userX < 0){
+          tempFacing = Math.PI + Math.atan((dz-userZ)/(dx-userX));
+        } else {
+          tempFacing = Math.atan((dz-userZ)/(dx-userX));
+        }
+        setFacing(tempFacing);
+        setMoving(true)
+        setPendingWindow("../Design")
+      }
+      if (props.command == "Voting Commune"){
+        const dx = 0
+        const dz = 12
+        setTargetX(dx)
+        setTargetZ(dz)
+        var tempFacing = 0;
+        if (dx-userX < 0){
+          tempFacing = Math.PI + Math.atan((dz-userZ)/(dx-userX));
+        } else {
+          tempFacing = Math.atan((dz-userZ)/(dx-userX));
+        }
+        setFacing(tempFacing);
+        setMoving(true)
+        setPendingWindow("../Vote")
+      }
+      if (props.command == "Shop"){
+        const dx = 0
+        const dz = -12
+        setTargetX(dx)
+        setTargetZ(dz)
+        var tempFacing = 0;
+        if (dx-userX < 0){
+          tempFacing = Math.PI + Math.atan((dz-userZ)/(dx-userX));
+        } else {
+          tempFacing = Math.atan((dz-userZ)/(dx-userX));
+        }
+        setFacing(tempFacing);
+        setMoving(true)
+        setPendingWindow("../Shop")
+      }
+    }, [props.command]);
     function handleClick(x,z){
+      console.log("x:",x)
       props.controlsRef.current.maxPolarAngle = Math.PI / 2.1; 
       props.controlsRef.current.minPolarAngle = Math.PI / 9 ;
       if (!moving){
@@ -161,6 +210,10 @@ function AnimatedFBXModel(props) {
         var length = Math.sqrt(diffX*diffX+diffY*diffY); //calculating length
         if (length < 0.5) {
           setMoving(false);
+          if(pendingWindow != ""){
+            window.location.href = pendingWindow
+            setPendingWindow("")
+          }
         }
         const delta = clock.getDelta() * 3;
         var fraction = delta / length;
@@ -373,7 +426,7 @@ function Players(props){
         <>
           {setup && (
             <>
-              <User username = {props.username} controlsRef = {props.controlsRef} socket={socket} loadHandler={loadHandler}/>
+              <User username = {props.username} controlsRef = {props.controlsRef} socket={socket} loadHandler={loadHandler} command={props.command}/>
               {Object.entries(dict).map(([key, value], index) => (
                 <NPC key={`NPC-${key}`} position={value} socketCon={users[key]} loadHandler={loadHandler} />
               ))}

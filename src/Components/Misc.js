@@ -1,11 +1,12 @@
 import { useThree } from '@react-three/fiber';
-import  { useRef } from 'react';
+import  { useRef, useMemo } from 'react';
 import * as THREE from 'three';
 import stage from '../assets/Stage.obj';
 import { useLoader } from '@react-three/fiber';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import floorTexture from '../assets/floor.jpg'
 import camel from '../assets/camel.fbx';
 import palmtree from '../assets/palmtree.fbx';
 
@@ -14,7 +15,7 @@ export function Floor(props) {
   const move = (event) => {
     props.updateLocation(event.point.x, event.point.z);
   };
-
+  const texture = useMemo(() => new THREE.TextureLoader().load(floorTexture), []);
   return (
     <mesh
       receiveShadow={true}
@@ -23,9 +24,10 @@ export function Floor(props) {
       ref={floorRef}
       onClick={move}
       layers={(floorRef.current && floorRef.current.layers.enable(0), [])}
+    
     >
-      <planeBufferGeometry receiveShadow attach="geometry" args={[1000, 1000]} />
-      <meshStandardMaterial receiveShadow attach="material" color="black"  />
+      <planeBufferGeometry receiveShadow attach="geometry" args={[100, 100]} />
+      <meshStandardMaterial receiveShadow attach="material"  map={texture}/>
     </mesh>
   );
 }
