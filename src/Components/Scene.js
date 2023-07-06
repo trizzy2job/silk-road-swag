@@ -9,6 +9,9 @@ import sfront from '../assets/skybox_front.png';
 import sback from '../assets/skybox_back.png';
 import { Box, SkyBox } from './Misc';
 import Players from './MultiPlayer';
+import chatIcon from '../assets/chat.png'
+import bed from '../assets/home.png'
+import settings from '../assets/settings.png'
 import './scene.css';
 
 function Scene(props) {
@@ -20,7 +23,8 @@ function Scene(props) {
   const [socket, setSocket] = useState(null);
   const [showChat, setShowChat] = useState(true);
   const urls = [sfront, sback, stop, sbot, sright, sleft];
-
+  const [roomName, setRoomName] = useState("")
+  const [command, setCommand] = useState("")
   const addChat = (newChat) => {
     if (socket) {
       socket.emit('addChat', newChat);
@@ -33,17 +37,16 @@ function Scene(props) {
     });
   };
 
-  useEffect(() => {
-    // Perform any additional operations or effects related to the chat state here
-    // This effect will run whenever `chats` state is updated
-  }, [chats]);
+  
+    
+  
 
   const scene = useMemo(() => (
     <Canvas shadowMap shadows ref={canvasRef} style={{ width: '100%', height: '100%' }}>
       <SkyBox urls={urls} />
-      <Box position={[20, 0, 0]} width={10} height={10} depth={10} color={'purple'} rotation={0} onClick={() => { window.location.href = '../Design' }} />
-      <Box position={[0, 0, 20]} width={10} height={10} depth={10} color={'green'} rotation={0} />
-      <Box position={[0, 0, -20]} width={10} height={10} depth={10} color={'yellow'} rotation={0} />
+      <Box position={[20, 0, 0]} width={10} height={10} depth={10} color={'purple'} rotation={0} onClick={() => {setRoomName("Design Studio")} } />
+      <Box position={[0, 0, 20]} width={10} height={10} depth={10} color={'green'} rotation={0} onClick={() => {setRoomName("Voting Commune")} }/>
+      <Box position={[0, 0, -20]} width={10} height={10} depth={10} color={'yellow'} rotation={0} onClick={() => {setRoomName("Shop")}} />
       <directionalLight
         color="white"
         intensity={1.5}
@@ -53,9 +56,9 @@ function Scene(props) {
       />
       <ambientLight intensity={0.2} color="white" />
       <OrbitControls ref={controlsRef} args={[cameraRef.current]} />
-      <Players setChat={setChats} setSocket={setSocket} username={props.username} controlsRef={controlsRef} loadHandler={props.loadHandler} />
+      <Players setChat={setChats} setSocket={setSocket} username={props.username} controlsRef={controlsRef} loadHandler={props.loadHandler} command={command}/>
     </Canvas>
-  ), []); // Empty dependency array to ensure the scene is memoized only once
+  ), [command]); // Empty dependency array to ensure the scene is memoized only once
 
   return (
     <>
@@ -68,7 +71,8 @@ function Scene(props) {
           width: '20%',
           height: '100%',
           background: 'rgba(0, 0, 0, 0.5)',
-          color: '#fff'
+          color: '#fff',
+          zIndex: '5'
         }}
       >
         <div id="chatHeader">
@@ -96,7 +100,72 @@ function Scene(props) {
         {/* Content of the column div */}
       </div>
   :null}
-      <div style={{ width: '80%', height: '100%', position: 'absolute', left: 0 }}>
+     <div style={{ position: 'absolute', top: 0, left: 0, width: '10%', height: '100%', zIndex: '10' }}>
+   
+        <div style={{ marginBottom: '10px' }}>
+        <button
+  style={{
+    width: '60px',
+    height: '60px',
+    borderRadius: '50%',
+    background: 'aqua',
+    backgroundImage: `url(${settings})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundSize: 'contain',
+  }}
+/>
+        </div>
+        <div style={{ marginBottom: '10px' }}>
+        <button
+  style={{
+    width: '60px',
+    height: '60px',
+    borderRadius: '50%',
+    background: 'aqua',
+    backgroundImage: `url(${chatIcon})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundSize: 'contain',
+  }}
+  onClick={e=>{setShowChat(!showChat)}}
+/>
+        </div>
+        <div>
+        <button
+  style={{
+    width: '60px',
+    height: '60px',
+    borderRadius: '50%',
+    background: 'aqua',
+    backgroundImage: `url(${bed})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundSize: 'contain',
+  }}
+/>
+        </div>
+      </div>
+      {roomName != "" && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '30%',
+            height: '75%',
+            background: 'rgba(0, 0, 0, 0.5)',
+            color: '#fff',
+            zIndex: '10',
+          }}
+        >
+          <h1> Enter the {roomName}</h1>
+          <button onClick={()=>{setCommand(roomName);setRoomName("")}}> Yes </button>
+          <button onClick={()=>setRoomName("")}> Cancel </button>
+        </div>
+      )}
+      <div style={{ width: '100%', height: '100%', position: 'absolute', left: 0, zIndex: '1' }}>
         {scene}
       </div>
     </>
