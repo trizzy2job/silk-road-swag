@@ -2,7 +2,12 @@ import { useThree } from '@react-three/fiber';
 import  { useRef } from 'react';
 import * as THREE from 'three';
 import stage from '../assets/Stage.obj';
+import { useLoader } from '@react-three/fiber';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import camel from '../assets/camel.fbx';
+import palmtree from '../assets/palmtree.fbx';
 
 export function Floor(props) {
   const floorRef = useRef();
@@ -27,6 +32,25 @@ export function Floor(props) {
 export function SkyBox(props) {
     const { scene } = useThree();
     const loader2 = new OBJLoader();
+    const loader3 = new FBXLoader();
+
+    loader3.load(
+      camel,
+      function ( object ) {
+        object.scale.set(0.005, 0.005, 0.005);
+        object.position.set(-12, -1.05, 3.05);
+
+        scene.add( object );}
+    )
+    loader3.load(
+      palmtree,
+      function ( object ) {
+        object.scale.set(0.005, 0.005, 0.005);
+        object.position.set(5, -1, 0.05);
+
+        scene.add( object );}
+    )
+
     loader2.load(
       // resource URL
       stage,
@@ -68,7 +92,26 @@ export function SkyBox(props) {
       </mesh>
     );
   }
+  export function Camel(props) {
+    const { scene } = useThree();
 
+    const camelModel = useLoader(FBXLoader, camel);
+    camelModel.position.set(props.position)
+    camelModel.rotation.set(props.rotation)
+    camelModel.scale.set(props.scale)
+    scene.add(camelModel)
+  
+    return (
+null    );
+  }
+  
+  export function PalmTree(props) {
+    const palmTreeModel = useLoader(FBXLoader, palmtree);
+  
+    return (
+      <primitive object={palmTreeModel} castShadow={true} receiveShadow={true} {...props} />
+    );
+  }
   export const ClickAnimation = (props) => {
     return (
       <mesh visible position={[props.x, -0.95, props.z]} rotation={[-3.1415 / 2, 0, 0]} castShadow>

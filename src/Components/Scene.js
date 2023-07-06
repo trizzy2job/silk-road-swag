@@ -7,7 +7,7 @@ import stop from '../assets/skybox_up.png';
 import sbot from '../assets/skybox_down.png';
 import sfront from '../assets/skybox_front.png';
 import sback from '../assets/skybox_back.png';
-import { Box, SkyBox } from './Misc';
+import { Box, SkyBox, Camel, PalmTree } from './Misc';
 import Players from './MultiPlayer';
 import './scene.css';
 
@@ -41,6 +41,9 @@ function Scene(props) {
   const scene = useMemo(() => (
     <Canvas shadowMap shadows ref={canvasRef} style={{ width: '100%', height: '100%' }}>
       <SkyBox urls={urls} />
+      <Camel position={[5, 2, 5]} size={1} color={'purple'} rotation={0} onClick={() => { window.location.href = '../Design' }} />
+      <PalmTree position={[-5, 0, 5]} size={1} color={'purple'} rotation={0} onClick={() => { window.location.href = '../Design' }} />
+
       <Box position={[20, 0, 0]} width={10} height={10} depth={10} color={'purple'} rotation={0} onClick={() => { window.location.href = '../Design' }} />
       <Box position={[0, 0, 20]} width={10} height={10} depth={10} color={'green'} rotation={0} />
       <Box position={[0, 0, -20]} width={10} height={10} depth={10} color={'yellow'} rotation={0} />
