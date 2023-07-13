@@ -28,7 +28,6 @@ function dataURItoBlob(dataURI) {
   }
 
 const Submit = () => {
-  const canvas = useRef(null);
   const [wallet, setWallet, setHandle] = useState();
   const handleSubmitProxy= async(hash) => {
     if(!window.ethereum){setErrMsg("Please install Metamask."); console.log("Window.ethereum error")}
@@ -73,7 +72,7 @@ const Submit = () => {
 
                 
                 setIpfs(resFile.data.IpfsHash);
-                console.log("ipfs test" + ipfs); 
+                console.log(" main ipfs test" + ipfs); 
                 console.log("pinata done full link:" + `ipfs://${resFile.data.IpfsHash}`)
 
                 const formData2 = new FormData();
@@ -92,7 +91,7 @@ const Submit = () => {
 
                 const ImgHash = resFile2.data.IpfsHash;
                 setSecondIpfs(resFile2.data.IpfsHash);
-                console.log("ipfs test" + ipfs); 
+                console.log("map ipfs test" + ipfs); 
                 console.log("pinata done full link:" + `ipfs://${resFile2.data.IpfsHash}`)
 
       return ImgHash;
@@ -101,22 +100,11 @@ const Submit = () => {
     
     }
     useEffect(() => {
-      if(canvas){
-        console.log("drawing canvas")
-        const image = new Image();
-        image.src = sessionStorage.getItem("designSubmission");
-        console.log("img.src:" + image.src)
-        const ctx=canvas.current.getContext("2d");
-        ctx.save();
-        
-        ctx.drawImage(image,0,0,400, 200);
-        ctx.restore();
    
-        const image2 = canvas.current.toDataURL('image/jpeg');
-        infura(image2, sessionStorage.getItem("mapSubmission"));
+        infura(sessionStorage.getItem("designSubmission"), sessionStorage.getItem("mapSubmission"));
         
         
-      }
+      
     },[]);
     
     useEffect(() => {
@@ -247,10 +235,10 @@ const Submit = () => {
           <br />
           </form>
           <div id="submissionDisplayedInPageDiv">    
-                  {/* <img src={sessionStorage.getItem("designSubmission")}/> */}
-                  <canvas ref={canvas} id="upCanvas" height="200px" width="400px" hidden={false}><h1>Hello</h1></canvas>
+                  <img src={sessionStorage.getItem("designSubmission")}/>
                   
-                  <img src={sessionStorage.getItem("mapSubmission")}></img>
+                  
+                  {/* <img src={sessionStorage.getItem("mapSubmission")}></img> */}
                   {/* <img onLoad = { () =>setIpfs(sessionStorage.getItem("designSubmission"))} id = "submissionDisplayedInSubmitPage" src = { "https://ipfs.io/ipfs/" + sessionStorage.getItem("designSubmission")}></img> */}
           </div>
           

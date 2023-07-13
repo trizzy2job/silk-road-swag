@@ -1,0 +1,90 @@
+#one{
+    font-style: oblique;
+    color:var(--secondary-color)
+  }
+  #two{
+    font-size:1.5em;
+    font-family: specMED;
+    margin-bottom:8px;
+  }
+  #three{
+    font-size:1em;
+    font-family: specMED;
+  
+  }
+  #four{
+    font-size: 3em;
+    background: var(--quadrinary-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  #uno{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  #dos{
+    padding-top:1%;
+    padding-right:5%;
+    padding-left:5%;
+    width:30%;
+    margin:auto;
+    margin-top: 0;
+  
+    background:var(--quadrinary-color);
+  }
+  #dos > h1{
+    font-size: 2em;
+  }
+  #dos > #two{
+    font-size: 1.5em;
+  }
+  #negativo{
+    font-family: kumarOutline;
+    color:var(--secondary-color);
+    font-variant: small-caps;
+    font-style:oblique;
+    text-decoration: underline solid var(--tertiary-color);
+    text-decoration-thickness: 3px;
+  
+  }
+  #container1{
+    display:flex;
+  }
+  #nameBox{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--tertiary-color);
+    width: 20vw;
+    margin:30px;
+    padding:10px;
+    height: 100%;
+  }
+
+  #wardrobe{
+    float:left;
+    background:var(--quadrinary-color);
+    width:100%;
+    margin:30px;
+    padding:10px;
+  
+  }
+  #neg{
+    background:var(--quadrinary-color);
+    margin-top:-4vw;
+    margin-bottom:5vw;
+    padding-bottom:35vh;
+    padding-top:2.5vh;
+    height:100%;
+  }
+  #voteList{
+    font-size: 17px;
+    color:var(--tertiary-color);
+    font-family: specMED;
+  }
+  
+  #notFound{
+    height:65vh;
+    justify-content: center;
+    padding-top:20vh;
+  }

@@ -1,0 +1,18 @@
+
+
+#nftButtons{
+    display: flex;
+    flex-direction: row;
+}
+
+#nftarrows{
+    width: 80%
+}
+#nftzoom{
+    width: 20%;
+  }
+
+#nftDown{
+    display: flex;
+    flex-direction: row;
+}

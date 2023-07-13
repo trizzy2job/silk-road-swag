@@ -285,34 +285,34 @@ function BackDrop3b() {
   );
   }
 
-function Startbuttone(){
-  return (
+// function Startbuttone(){
+//   return (
       
-      <mesh position={[500,30,0]}>
-          <Html transform position={[0,0,0]} height={400} width={200}>
-          <div>
-              <div id="startbuttonDiv">
-                  <h1 id="startbuttonscript">Pick Your Shirt Color</h1>
-              </div>
-          </div>
-      </Html >
-      </mesh>
-    );
-  }
+//       <mesh position={[500,30,0]}>
+//           <Html transform position={[0,0,0]} height={400} width={200}>
+//           <div>
+//               <div id="startbuttonDiv">
+//                   <h1 id="startbuttonscript">Pick Your Shirt Color</h1>
+//               </div>
+//           </div>
+//       </Html >
+//       </mesh>
+//     );
+//   }
 
-function Startbuttone2(){
-  return (
-      <mesh position={[0,30,-500]}  rotation={[0,3.14/2,0]}>
-          <Html transform position={[0,0,0]} height={400} width={200} >
-            <div>
-                <div id="startbuttonDiv">
-                    <h1 id="startbuttonscript">Style your shirt</h1>
-                </div>
-            </div>
-        </Html >
-      </mesh>
-  );
-}
+// function Startbuttone2(){
+//   return (
+//       <mesh position={[0,30,-500]}  rotation={[0,3.14/2,0]}>
+//           <Html transform position={[0,0,0]} height={400} width={200} >
+//             <div>
+//                 <div id="startbuttonDiv">
+//                     <h1 id="startbuttonscript">Style your shirt</h1>
+//                 </div>
+//             </div>
+//         </Html >
+//       </mesh>
+//   );
+// }
 
 export function BasicShirtDisplaySill(prop){
     const [yrot, setYRot] = useState(1);
@@ -345,8 +345,10 @@ export function BasicShirtDisplaySill(prop){
           },[prop.itemt]);
 
     function screenShot(){
-      if(prop.scene == 2)
+      if(prop.scene == 2){
         console.log("buttered up for a screenshot");
+        const pixelRatio = window.devicePixelRatio || 1;
+        gl.setPixelRatio(pixelRatio);
         gl.render(scene, camera)
         gl.toneMapping = THREE.ACESFilmicToneMapping
         gl.toneMappingExposure = 0.6
@@ -360,6 +362,7 @@ export function BasicShirtDisplaySill(prop){
           }
           
         )
+    }
     }
    if (!realFbx){
     return null;
@@ -445,7 +448,7 @@ export const InsideDesigner= (props) => {
         <>
           <CameraController0/>
           <ColorMaker color={props.color}/>
-          <Startbuttone />
+          {/* <Startbuttone /> */}
         </>
         : 
         // second room
@@ -456,7 +459,7 @@ export const InsideDesigner= (props) => {
           <NeonSign />
           
           <Wallc2b />
-          <Startbuttone2 />
+          {/* <Startbuttone2 /> */}
           <PixelScreen />
         </>
         }

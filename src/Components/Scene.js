@@ -135,7 +135,7 @@ function Scene(props) {
 />
         </div>
         <div>
-        <button
+        <button onClick={() => window.location.href = "../profile"}
   style={{
     width: '60px',
     height: '60px',

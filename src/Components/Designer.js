@@ -5,6 +5,7 @@ import {  Link } from "react-router-dom";
 import waterMark from "../assets/colorback.png";
 import down from "../assets/colorback.png";
 import arrow from "../assets/upArrow.png";
+import NFTMaker from './nftMaker';
 // import {arrayify, hexlify} from "@ethersproject/bytes";
 // import {create} from 'ipfs-http-client';
 // import { encrypt, decrypt, PrivateKey } from 'eciesjs';
@@ -39,17 +40,22 @@ export const Designer = () =>{
     const waterImage = new Image();
     waterImage.src = waterMark;
     const [childData, setChildData] = useState("");
+    const [sides, setSides] = useState([])
+    useEffect(() =>{
+        if(scene ==3){
+            console.log("storing mapping")
+            sessionStorage.setItem("mapSubmission", threedmock)
+        }
+        },[scene])
     function submitPage(){
         sessionStorage.setItem("designSubmission", childData)
-        sessionStorage.setItem("mapSubmission", threedmock)
+      
         window.location.href = "../Submit"
     }
 
     function changeRot(direction){
-        console.log("Current rot:  "+rots[pointer]);
         var tempRot = rots;
-   
-        tempRot[pointer] = 180 * (direction-150)/150;
+        tempRot[pointer] = direction * 3.1415 / 180;
         console.log(direction);
         setRots(tempRot);
         setTop(top+1);
@@ -72,6 +78,9 @@ export const Designer = () =>{
         setRots(tempR);
         console.log("popped pointer at")
         setSizes(tempS);
+        var tempSi = sides
+        tempSi.pop(pointer);
+        setSides(tempSi);
         if (pointer != 0){
             setPointer(pointer - 1);
         }
@@ -80,7 +89,80 @@ export const Designer = () =>{
         setPendingImage(false);
         setTop(top+1)
     }
-
+    function calculateMainCanvasCoordinatesFront(x, y) {
+        // Define the mapping between the smaller frame and main canvas coordinates
+        const framePoints = [
+            
+          { frameX: 0, frameY: 0, mainX: 305, mainY:  932 },
+          { frameX: 1, frameY: 0, mainX: 123, mainY: 931 },
+          { frameX: 1, frameY: 1, mainX: 123, mainY: 661 },
+          { frameX: 0, frameY: 1, mainX: 305, mainY: 661 },
+        ];
+      
+        // Calculate the normalized coordinates within the frame
+        const normalizedX = (x - framePoints[0].frameX) / (framePoints[1].frameX - framePoints[0].frameX);
+        const normalizedY = (y - framePoints[0].frameY) / (framePoints[3].frameY - framePoints[0].frameY);
+      
+        // Find the corresponding points in the main canvas
+        const mainPoint1 = framePoints[0];
+        const mainPoint2 = framePoints[1];
+        const mainPoint3 = framePoints[2];
+        const mainPoint4 = framePoints[3];
+        console.log("before inter")
+        // Interpolate the main canvas coordinates based on the normalized coordinates
+        const mainX = interpolate(mainPoint1.mainX, mainPoint2.mainX, mainPoint3.mainX, mainPoint4.mainX, normalizedX, normalizedY);
+        const mainY = interpolate(mainPoint1.mainY, mainPoint2.mainY, mainPoint3.mainY, mainPoint4.mainY, normalizedX, normalizedY);
+        console.log("after inter")
+        console.log(mainX, mainY)
+        return [ mainX, mainY ];
+      }
+      
+      // Helper function for linear interpolation
+      function interpolate(x1, x2, x3, x4, t, u) {
+        return (
+          (1 - t) * (1 - u) * x1 +
+          t * (1 - u) * x2 +
+          t * u * x3 +
+          (1 - t) * u * x4
+        );
+      }
+    function calculateMainCanvasCoordinatesBack(x, y) {
+    
+        // Define the mapping between the smaller frame and main canvas coordinates
+        const framePoints = [
+          { frameX: 0, frameY: 0, mainX: 75, mainY: 514.5 },
+          { frameX: 1, frameY: 0, mainX: 74, mainY: 319 },
+          { frameX: 1, frameY: 1, mainX: 363, mainY: 317 },
+          { frameX: 0, frameY: 1, mainX: 362, mainY: 513 },
+        ];
+      
+        // Calculate the normalized coordinates within the frame
+        const normalizedX = (x - framePoints[0].frameX) / (framePoints[1].frameX - framePoints[0].frameX);
+        const normalizedY = (y - framePoints[0].frameY) / (framePoints[3].frameY - framePoints[0].frameY);
+      
+        // Find the corresponding points in the main canvas
+        const mainPoint1 = framePoints[0];
+        const mainPoint2 = framePoints[1];
+        const mainPoint3 = framePoints[2];
+        const mainPoint4 = framePoints[3];
+        console.log("before inter")
+        // Interpolate the main canvas coordinates based on the normalized coordinates
+        const mainX = interpolate(mainPoint1.mainX, mainPoint2.mainX, mainPoint3.mainX, mainPoint4.mainX, normalizedX, normalizedY);
+        const mainY = interpolate(mainPoint1.mainY, mainPoint2.mainY, mainPoint3.mainY, mainPoint4.mainY, normalizedX, normalizedY);
+        console.log("after inter")
+        console.log(mainX, mainY)
+        return [ mainX, mainY ];
+      }
+      
+      // Helper function for linear interpolation
+      function interpolate(x1, x2, x3, x4, t, u) {
+        return (
+          (1 - t) * (1 - u) * x1 +
+          t * (1 - u) * x2 +
+          t * u * x3 +
+          (1 - t) * u * x4
+        );
+      }
     const handleInputChange = (event) => {
         //add image
         //doesnt allow more than 4 images to be uploaded to a shirt
@@ -91,7 +173,14 @@ export const Designer = () =>{
         const upImage = new Image();
         upImage.onload = function(){
             var tempSiz = sizes;
-            tempSiz.push([this.width,this.height]);
+            if(this.width > this.height){
+                let ratio = this.height/this.width
+                tempSiz.push([100,100 * ratio]);
+            }
+            else{
+                let ratio = this.height/this.width
+                tempSiz.push([100 * ratio,100]);
+            }
             setSizes(tempSiz);
         }
         upImage.src = temp;
@@ -102,22 +191,59 @@ export const Designer = () =>{
         setPointer(pointer+1);
         setNumElements(numElements+1);
         var tempPos = pos;
-        tempPos.push([270,320]);
+        tempPos.push([0.5,0.5]);
         setPos(tempPos);
         var tempRot = rots
-        tempRot.push(0);
+        tempRot.push(3.1415);
         setRots(tempRot);
+        var tempSides = sides
+        tempSides.push(true)
+        setSides(tempSides)
         setPendingImage(true);
         console.log("Rots: "+ rots);
         // setPI(event.target.files[0]);
       }
-    function drawRot(ctx,i){
-        ctx.save();
-        ctx.translate(pos[i][0],pos[i][1]);
-        ctx.rotate(Math.PI/180 * rots[i]);
-        ctx.translate(0,0); //check
-        ctx.drawImage(images[i],0-sizes[i][0]/2,0-sizes[i][1]/2,sizes[i][0],sizes[i][1]);
-        ctx.restore();
+    function drawRot(ctx, i) {
+    ctx.save();
+    let temp;
+    if(sides[i]){
+        temp = calculateMainCanvasCoordinatesFront(pos[i][0], pos[i][1])
+    }
+    else{
+        temp = calculateMainCanvasCoordinatesBack(pos[i][0], pos[i][1])
+    }
+    ctx.translate(temp[0], temp[1]);
+    ctx.rotate(rots[i]); // Radians are used directly since we already calculated the rotation angle
+    ctx.drawImage(images[i], -sizes[i][0] / 2, -sizes[i][1] / 2, sizes[i][0], sizes[i][1]);
+    ctx.restore();
+}
+
+    const changeLayers = (f, s) =>{
+        console.log("changed layers")
+        if(f >= 0 && s < images.length ){
+            var temp = images;
+            var t1 = images[f]
+            temp[f] = temp[s]
+            temp[s] = t1
+            setImages(temp);
+            var tempP = pos
+            t1 = pos[f]
+            tempP[f] = pos[s]
+            tempP[s] = t1
+            setPos(tempP);
+            var tempS = sizes
+            t1 = sizes[f]
+            tempS[f] =sizes[s]
+            tempS[s] = t1
+            var tempR = rots;
+            t1 = rots[f]
+            tempR[f] =rots[s]
+            tempR[s] = t1
+            setRots(tempR);
+        }
+        else{
+            console.log("action blocked")
+        }
     }
     
     useEffect(() =>{
@@ -142,7 +268,7 @@ export const Designer = () =>{
             
 
         }
-    },[top, pos, water, shirtColor, rots])
+    },[top, pos, water, shirtColor, rots, sides])
 
 
     const click = ({nativeEvent}) => {
@@ -196,14 +322,24 @@ export const Designer = () =>{
         }
     
     return(
+        <>
+        
         <div id = "fullDesign">
             <Link to ="">
+            {scene == 1?
             <div id="rightBackground" onClick={e=>setScene(2)} >
             
-                <h1>Done Editing</h1>
+                <h1>Done</h1>
         
             </div>
+            :null}
+            {scene ==3 ?
+                <div id="rightBackground" onClick={e=>setScene(4)} >
             
+                <h1>Done</h1>
+        
+            </div>
+            :null}
             </Link>
             {/* {scene==1 ?  
                  
@@ -220,11 +356,33 @@ export const Designer = () =>{
                 <div id="imagesCol">
                     {
                         images.map((img, index)=>{
+                            const isActive = index === pointer;
                             if (index == images.length-1 && penI){
                                 return
                             }
                             return(
-                                <div id="imgBox" onClick={e=>setPointer(index)}>
+                                
+                                <div id={isActive?"imgBoxActive":"imgBox"} onClick={e=>setPointer(index)}>
+                                    <div id="toggleBox" onClick={e=>{
+                                                const temp = sides
+                                                let trots = rots
+                                                if(temp[index]){
+                                                    trots[index] = trots[index] + 3.1415/2
+                                                }
+                                                else{
+                                                    trots[index] = trots[index] - 3.1415/2
+                                                }
+                                                setRots(trots)
+                                                temp[index] = !temp[index]
+                                                
+                                                setSides(temp)
+                                                setTop(top+"1")
+                                            }   
+                                        }>
+                                        {sides[index]? 
+                                        <h3>Move to Back</h3>
+                                        :<h3>Move to Front</h3>}
+                                    </div>
                                     <div id="smallImage">
                                         <img src={img.src} height="100%"width="auto"/>
                                     </div >
@@ -232,9 +390,25 @@ export const Designer = () =>{
                                         <h3>Size: {parseInt(sizes[index][0])}, {parseInt(sizes[index][1])}</h3>
                                         <h3>Coordinates: {pos[index][0]}, {pos[index][1]} </h3>
                                         <h3>Rotation: {rots[index]}</h3>
-                                        <h1>{index + 1}</h1>
+                                        <h3>Layer: {index + 1}</h3>
                                     </div>
-                                    <br />
+
+                                    <div id="changeLayer">
+                                        {index > 0 ?
+                                            <button onClick ={() =>{
+                                                changeLayers(index-1, index);
+                                                setTop(top+"1")
+                                            }
+                                        }>Up</button>
+                                        :null}
+                                        {index < sizes.length -1 ?
+                                        <button onClick ={() =>{
+                                            changeLayers(index, index+1)
+                                            setTop(top+"1")
+                                         } }>Down</button>
+                                        :null}
+                                    </div>
+                                    
                                 </div>
                                 
                                 
@@ -272,15 +446,12 @@ export const Designer = () =>{
                    
                     </div>
                     :null}
-            {!(scene==1 && (images.length <= 0 || top <= 1))? 
+            {!((scene==1 || scene ==3) && (images.length <= 0 || top <= 1))? 
             <div id="modelBackground">
                 {scene==0 ?
              <div id = "scene0">
                 <h1>Color Picker</h1>
                         <input id="shirtColorPicker3" type="color" name="head" value={shirtColor} onChange={e=>{setShirtColor(e.target.value)}}/>
-               
-                   
-                    <label for="head">Pick Your Shirt Color</label>
                 <button onClick={e=>{{setScene(1)};setZCamera(-500);setMove(true)}}>Use Color</button>
             </div>
              : null}
@@ -293,46 +464,66 @@ export const Designer = () =>{
                 <div id = "arrowContainer">
                     <div id="arrowContainer2">
                         <div id="topArrows">
-                            <button id="topBut" onClick={e=>{
+                            <div id="topBut" > <img src={arrow} id="botButtonImage" onClick={e=>{
                                     if (pos.length>0){
                                         var temp = pos;
-                                        temp[pointer][1] = pos[pointer][1] + 10;
-                                        setPos(temp);
-                                        setTop(top+1);
+                                        if(temp[pointer][1] > 0.11){
+                                            temp[pointer][1] = pos[pointer][1] - 0.1;
+                                            setPos(temp);
+                                            setTop(top+1);
+                                        }
+                                        else{
+                                            console.log("action blocked")
+                                        }
                                     }
-                                }}> <img src={arrow} id="botButtonImage" /></button>
+                                }}/></div>
                          </div>
                         <div id="botArrows"> 
-                        <button className="botBut">
-                            <img src={arrow} alt="Arrow" id="botButtonImage" onClick={e=>{
+                        <div className="botBut">
+                            <img src={arrow} alt="Arrow" id="botButtonImageLeft" onClick={e=>{
                                     if (pos.length>0){
                                         var temp = pos;
-                                        temp[pointer][0] = pos[pointer][0] - 10;
-                                        setPos(temp);
-                                        setTop(top+1);
+                                        if(temp[pointer][0] > 0.11){
+                                            temp[pointer][0] = pos[pointer][0] - 0.1;
+                                            setPos(temp);
+                                            setTop(top+1);
+                                        }
+                                        else{
+                                            console.log("action blocked")
+                                        }
                                     }
                                 }}/>
-                        </button>
-                        <button className="botBut">
-                            <img src={arrow} alt="Arrow" id="botButtonImage" onClick={e=>{
+                        </div>
+                        <div className="botBut">
+                            <img src={arrow} alt="Arrow" id="botButtonImageMiddle" onClick={e=>{
                                     if (pos.length>0){
                                         var temp = pos;
-                                        temp[pointer][1] = pos[pointer][1] - 10;
-                                        setPos(temp);
-                                        setTop(top+1);
+                                        if(temp[pointer][1] < 0.9){
+                                            temp[pointer][1] = pos[pointer][1] + 0.1;
+                                            setPos(temp);
+                                            setTop(top+1);
+                                        }
+                                        else{
+                                            console.log("action blocked")
+                                        }
                                     }
                                 }}/>
-                        </button>
-                        <button className="botBut" onClick={e=>{
+                        </div>
+                        <div className="botBut" onClick={e=>{
                                     if (pos.length>0){
                                         var temp = pos;
-                                        temp[pointer][0] = pos[pointer][0] + 10;
+                                        if(temp[pointer][0] < 0.89){
+                                        temp[pointer][0] = pos[pointer][0] + 0.1;
                                         setPos(temp);
                                         setTop(top+1);
+                                        }
+                                    }
+                                    else{
+                                        console.log("action blocked")
                                     }
                                 }}>
-                            <img src={arrow} alt="Arrow" id="botButtonImage" />
-                        </button>
+                            <img src={arrow} alt="Arrow" id="botButtonImageRight" />
+                        </div>
                         </div>
                     </div>
                    <div id="sizeContainer"> 
@@ -356,149 +547,106 @@ export const Designer = () =>{
                         }}>Enlarge</button>
                    </div>
                     </div>
-                {/* <div id="rightDesign2">
-                    
-                   <div id="rdco">
-                    <div id="posGroup">
-                       
-                       <div id='arrowB'>
-                        <div id="arrowS2">
-             
-                       <button id="arrowU"onClick={e=>{
-                           if (pos.length>0){
-                                var temp = pos
-                                temp[pointer][1] = pos[pointer][1] - 10;
-                                setPos(temp);
-                                setTop(top+1);
-                            }
-                            }}><img src={arrow} height="50px"></img></button>
-                        </div>
-        
-                        <div id="arrowS2">
-                           <div id="arrowS">
-                                <button onClick={e=>{
-                                    if (pos.length>0){
-                                        var temp = pos
-                                        temp[pointer][0] = pos[pointer][0] - 10;
-                                        setPos(temp);
-                                        setTop(top+1);
-                                    }
-                                    }} id="lbut"><img width="50px"src={arrow}></img></button>
-                      
-                                <button onClick={e=>{
-                                    if (pos.length>0){
-                                        var temp = pos
-                                        temp[pointer][1] = pos[pointer][1] + 10;
-                                        setPos(temp);
-                                        setTop(top+1);
-                                    }
-                                }}><img id="dbut"src={arrow} height="50px"></img></button>
-                           
-                                <button onClick={e=>{
-                                    if (pos.length>0){
-                                        var temp = pos;
-                                        temp[pointer][0] = pos[pointer][0] + 10;
-                                        console.log(temp[pointer][0]);
-                                        setPos(temp);
-                                        setTop(top+1);
-                                    }
-                                }}><img id="rbut"src={arrow} width="50px"></img></button>
-                            </div>
-                            </div>
-                               
-                    </div>
-                    </div>
-                   </div>
-                    <div id="rdco">
-                      
-                       
-                        
-                        <button onClick={e=>{
-                            if (pos.length>0){
-                                var temp = sizes;
-                                temp[pointer][0] = temp[pointer][0] * 0.8;
-                                temp[pointer][1] = temp[pointer][1] * 0.8;
-                                setSizes(temp);
-                                setTop(top+1);
-                            }
-                            }}>Shrink</button>
-                        <button onClick={e=>{
-                            if (pos.length>0){
-                                var temp = sizes;
-                                temp[pointer][0] = temp[pointer][0] * 1.2;
-                                temp[pointer][1] = temp[pointer][1] * 1.2;
-                                setSizes(temp);
-                                setTop(top+1);
-                            }
-                        }}>Enlarge</button>
-                    </div> 
-                    
-                    </div>*/}
-                    <div id="rotationContainer">
-                        <h2>Rotate</h2>
-                        <input type="range" min='1'max="300"onChange={e=>changeRot(e.target.value)}></input >
-                    </div>
+              
+                    <div id="rotationContainer" style={{ height: '20%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+  <h2>Rotate</h2>
+  <input type="range" min="0" max="360" onChange={e => changeRot(e.target.value)} />
+</div>
                     </>
                 : null}
 
 {scene==2?
                    <div>
-                        <h2>Complete</h2>
-                        {/* <div id="rightDesign2">
-                            <h1>Finishing Touches</h1>
-                            <button onClick={e=>{
-                                if (water){
-                                    setWater(false)
-                                }
-                                else{
-                                    setWater(true);
-                                }
-                            }}> Toggle Water Mark</button>   
-                            <button onClick={designSpecs}>Download Report</button>
-                            {childData ==''?
-                            <div id="checkCamera">
-                                <h2>Press the Camera to Take Your Photo</h2>
-                            </div>
-                            : null}  
-                    </div> */}
-                    {childData !=''?
+                      
+                    {childData !='' ?
                     //screenshot is deplayed
                         <div >
-                            <button href = "/Submit" id="finishDButton" onClick={e=>{
+                            {/* <button href = "/Submit" id="finishDButton" onClick={e=>{
                                     const canvas = document.getElementById("upCanvas");
-                                    const image = canvas.toDataURL('image/jpeg');
+                                    const image = canvas.toDataURL('image/jpeg',0.9);
                                     infura(image);
                                     console.log(image.src);
                                 }}>
-                            {/* <h1>Finish Design</h1>
-                            <p>Upload to IPFS</p> */}
-                            </button>
+                            <h1>Finish Design</h1>
+                            <p>Upload to IPFS</p>
+                            </button> */}
 
                             {/* <button >{childData}</button> */}
 
                    
 
-                                <div>
+                                {/* <div>
                                     <h2>Your image:</h2>
                                     <img width="100%"src={childData}/>
-                                    <button onClick={e=>{submitPage()}}>I'm happy with how it looks</button>
-                                </div>
-
+                                    <button onClick={e=>{submitPage()}} >Keep Image</button>
+                                    <button>Retake</button>
+                                </div> */}
+                            
                        
 
                         </div>
-                         : null}  
+                         :
+                        <div id="picInstructions">
+                            <h2>Take a Picture</h2>
+                            <h3>Adjust your view to position the camera</h3>
+                            <h3>Press on the character to snap a photo</h3>
+                        </div>
+                         }  
                     </div>
                 : null}    
             </div>
+            
             :null}
             <div id="dd2model">
                 <InsideDesigner src={threedmock} scene={scene} z={zcamera} move={move} color={shirtColor} parent={setChildData} />
             
             </div>
              {/* Hidden 2-D Canvas for designing */}
-                <canvas ref={canvas} id="upCanvas" height="1000px" width="1000px" onMouseDown={click} hidden={true}><h1>Hello</h1></canvas> 
+                <canvas ref={canvas} id="upCanvas" height="1000px" width="1000px" onMouseDown={click} hidden={true} onClick={(event)=>{
+                  
+                    const canvasRect = canvas.current.getBoundingClientRect();
+                 
+                    const clickX = (event.clientX - canvasRect.left) 
+                    const clickY = (event.clientY - canvasRect.top) 
+                    console.log(clickX, clickY);
+                   
+                }}><h1>Hello</h1></canvas> 
             </div>
+            {childData !== '' && scene == 2 && (
+      <div id="popup">
+        <div className="popup-content">
+          <h2>Are you sure?</h2>
+          {/* <img src={childData} alt="Image" className="popup-image" /> */}
+          <div id="nftDiv">
+           <NFTMaker src={childData} width={0.9}/>
+        </div>
+          <p>Your additional message here</p>
+          <button onClick={e=>{setScene(3)}}>Crop Image</button>
+          <button onClick={e=>{
+            console.log(scene)
+            console.log(childData)
+            setChildData('')
+          }}>Retake</button>
+        </div>
+      </div>
+    )}
+       {childData !== '' && scene > 2 && (
+      <div id="popup">
+        <div className="popup-content">
+          <h2>Are you sure?</h2>
+          {/* <img src={childData} alt="Image" className="popup-image" /> */}
+          <div id="nftDiv">
+           <NFTMaker src={childData} width={0.9} scene={scene}/>
+        </div>
+          {/* <p>Cutomise the NFT</p>
+          <button onClick={e=>{setScene(3)}}>Zoom Out</button>
+          <button onClick={e=>{
+          }}>Zoom In</button> */}
+        </div>
+      </div>
+    )}
+        </>
+        
     )
 }
 
