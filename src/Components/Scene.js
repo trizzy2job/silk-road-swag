@@ -12,6 +12,7 @@ import Players from './MultiPlayer';
 import chatIcon from '../assets/chat.png'
 import bed from '../assets/home.png'
 import settings from '../assets/settings.png'
+import srs from '../assets/real-cropped.png'
 import './scene.css';
 
 function Scene(props) {
@@ -103,8 +104,8 @@ function Scene(props) {
         {/* Content of the column div */}
       </div>
   :null}
-     <div style={{ position: 'absolute', top: 0, left: 0, width: '10%', height: '100%', zIndex: '10' }}>
-   
+     <div style={{ position: 'absolute', top: 0, left: 0, width: '10%', height: '100%', zIndex: '10'}}>
+     
         <div style={{ marginBottom: '10px' }}>
         <button
   style={{
@@ -148,6 +149,23 @@ function Scene(props) {
   }}
 />
         </div>
+        <div style={{ position: 'fixed', bottom: '10px', left: '10px', zIndex: '10' }}>
+  {/* Previous buttons */}
+  {/* Add new button */}
+  <button
+    style={{
+      width: '60px',
+      height: '60px',
+      borderRadius: '50%',
+      background: 'aqua',
+      backgroundImage: `url(${srs})`,
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      backgroundSize: 'contain',
+    }}
+    onClick={() => window.location.href = '../About'}
+  />
+</div>
       </div>
       {roomName != "" && (
         <div
